@@ -3,9 +3,12 @@
 import UsersWrapper from "@/components/UsersWrapper";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Spinner } from "@nextui-org/spinner";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -28,13 +31,20 @@ export default function Users() {
     fetchUsers();
   }, []);
 
+  // const Loading = () => {
+  //     return (
+  //         if (loading) return <p>Loading users...</p>;
+  //     )
+  // }
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <UsersWrapper>
-      <h2>Users List</h2>
+      {loading ? <Spinner size="lg" color="black" /> : <h2>Users List</h2>}
       <ul>
         {users.map((user) => (
-          <li key={user.id}>
-            {user.phoneNumber} - {user.email}
+          <li key={user._id}>
+            {user.phoneNumber} - {user.email} - {user.role}
           </li>
         ))}
       </ul>

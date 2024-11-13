@@ -16,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Spinner } from "@nextui-org/spinner";
 
 
 const formSchema = z.object({
@@ -24,6 +26,7 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const [loading, setLoading] = useState(true);
   const { login } = useAuth();
  
  
@@ -67,6 +70,8 @@ export default function Login() {
       login(user, token); 
     } catch (error) {
       console.error("Login error:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -109,7 +114,7 @@ export default function Login() {
               )}
             />
             <div className="">
-              <Button size="lg" type="submit">Login</Button>
+              <Button size="lg" type="submit">{ loading ? <p>Login</p>  : <Spinner size="sm" color="white" /> }</Button>
             </div>
           </form>
         </Form>

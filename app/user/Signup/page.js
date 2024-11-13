@@ -19,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
+import { Spinner } from "@nextui-org/spinner";
+import { useState } from "react";
 
 const formSchema = z.object({
   phoneNumber: z
@@ -31,6 +33,7 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const [loading, setLoading] = useState(true);
   const { login } = useAuth();
 
   const form = useForm({
@@ -69,9 +72,11 @@ export default function Login() {
       console.log("User Data:", user);
 
       // Use the login function from your UserContext
-    //   login(user, token); // Assuming `login` accepts userData and token
+      //   login(user, token); // Assuming `login` accepts userData and token
     } catch (error) {
       console.error("Login error:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -174,7 +179,11 @@ export default function Login() {
 
                 <div className="">
                   <Button variant="secondary" size="lg" type="submit">
-                    Sign up
+                    {loading ? (
+                      <p>Login</p>
+                    ) : (
+                      <Spinner color="white" size="sm" />
+                    )}
                   </Button>
                 </div>
               </form>
