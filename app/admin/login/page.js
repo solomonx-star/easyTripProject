@@ -26,6 +26,7 @@ const formSchema = z.object({
 });
 
 export default function Login() {
+  const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const { login } = useAuth();
  
@@ -68,6 +69,14 @@ export default function Login() {
 
       // Use the login function from your UserContext
       login(user, token); 
+
+      setShowModal(true);
+
+      setTimeout(() => {
+        setShowModal(false);
+        // setLoading(false);
+        // router.push("/user/Login");
+      }, 4000);
     } catch (error) {
       console.error("Login error:", error);
     } finally {
@@ -80,6 +89,14 @@ export default function Login() {
   return (
     <div className="pt-[200px] flex items-center justify-center ">
       <div className="shadow-md w-[25%] space-y-[20px] p-[60px] rounded-md">
+        {showModal && (
+          <div className="relative flex items-center justify-center">
+            <div className="w-[250px] h-[] p-4 rounded-lg absolute bottom-1 text-center">
+              <p className="text-xs text-green-500 ">
+                Login Successful!</p>
+            </div>
+          </div>
+        )}
         <div className="flex justify-center">
           <p className="text-2xl">Admin Login</p>
         </div>
@@ -114,7 +131,9 @@ export default function Login() {
               )}
             />
             <div className="">
-              <Button size="lg" type="submit">{ loading ? <p>Login</p>  : <Spinner size="sm" color="white" /> }</Button>
+              <Button size="lg" type="submit">
+                {loading ? <p>Login</p> : <Spinner size="sm" color="white" />}
+              </Button>
             </div>
           </form>
         </Form>

@@ -34,6 +34,7 @@ const formSchema = z.object({
 
 export default function Login() {
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const { login } = useAuth();
 
   const form = useForm({
@@ -47,6 +48,7 @@ export default function Login() {
   });
 
   async function onSubmit(values) {
+    // setLoading(true);
     try {
       // Make a POST request to your login endpoint with JSON data
       const response = await fetch(
@@ -61,7 +63,7 @@ export default function Login() {
       );
 
       if (!response.ok) {
-        throw new Error("Login failed");
+        throw new Error("Sign up failed");
       }
 
       const data = await response.json();
@@ -72,12 +74,22 @@ export default function Login() {
       console.log("User Data:", user);
 
       // Use the login function from your UserContext
-      //   login(user, token); // Assuming `login` accepts userData and token
+      // login(user, token); // Assuming `login` accepts userData and token
+
+
+      // setLoading(false); // Stop loading
+      setShowModal(true);
+
+      setTimeout(() => {
+        setShowModal(false);
+        setLoading(false);
+        // router.push("/user/Login"); 
+      }, 2000);
+
     } catch (error) {
       console.error("Login error:", error);
-    } finally {
       setLoading(false);
-    }
+    } 
   }
 
   return (
@@ -94,6 +106,13 @@ export default function Login() {
         </div>
         <div className="shadow-xl space-y-[20px] p-[60px] rounded-md md:w-6/12 w-full items-center flex flex-col justify-center">
           <div className="px-10 py-20 bg-gray-100 border-[0.2px] border-gray-100 shadow-lg rounded">
+            {showModal && (
+              <div className="relative flex items-center justify-center">
+                <div className="w-[250px] h-[] p-4 rounded-lg absolute bottom-1 text-center">
+                  <p className="text-xs text-green-500 ">Sign Up Successful!</p>
+                </div>
+              </div>
+            )}
             <div className="w-96">
               <p className="text-2xl font-bold">Sign up</p>
               <div className="flex gap-1">
@@ -178,12 +197,13 @@ export default function Login() {
                 />
 
                 <div className="">
-                  <Button variant="secondary" size="lg" type="submit">
-                    {loading ? (
-                      <p>Login</p>
+                  <Button className="text-white" variant="secondary" size="lg" type="submit">
+                    Sign up
+                    {/* {loading ? (
+                      <p>Sign up</p>
                     ) : (
                       <Spinner color="white" size="sm" />
-                    )}
+                    )} */}
                   </Button>
                 </div>
               </form>
