@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/userContext";
 
 import { NextUIProvider } from "@nextui-org/react";
+import SideBar from "./admin/sidebar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
