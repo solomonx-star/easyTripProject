@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Users() {
   const [users, setUsers] = useState([]);
+  const [userCount, setUserCount] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -41,18 +42,35 @@ export default function Users() {
     fetchUsers();
   }, []);
 
-  // const Loading = () => {
-  //     return (
-  //         if (loading) return <p>Loading users...</p>;
-  //     )
-  // }
+  useEffect(() => {
+    const fetchUserCount = async () => {
+      try {
+        const response = await axios.get(
+          "https://easytrip-salone.up.railway.app/api/admin/count"
+        );
+        setUserCount(response.data.count); // Access the count directly
+      } catch (err) {
+        console.error("Error fetching user count:", err);
+        setError("Error fetching user count.");
+      }
+    };
+
+    fetchUserCount();
+  }, []);
+
+
+
   if (error) return <p>Error: {error}</p>;
 
   return (
     <UsersWrapper>
       <div className="flex flex-col flex-grow h-screen">
         <div className="h-[30%] flex items-center justify-around">
-          <div className="h-[200px] w-[520px] rounded-md shadow bg-gray-100"></div>
+          <div className="h-[200px] w-[520px] rounded-md shadow bg-gray-100 justify-center items-center flex">
+            <p className="text-[#189AA7]">
+              {userCount !== null ? `Total Users: ${userCount}` : "Loading..."}
+            </p>
+          </div>
           <div className="h-[200px] w-[520px] rounded-md shadow bg-gray-100"></div>
           <div className="h-[200px] w-[520px] rounded-md shadow bg-gray-100"></div>
         </div>
@@ -79,7 +97,9 @@ export default function Users() {
                     <TableCell className="">{item.email}</TableCell>
                     <TableCell className="">{item.phoneNumber}</TableCell>
                     <TableCell className="">
-                      <Button className="">Delete</Button>
+                      <Button variant="destructive" className="">
+                        Delete
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
