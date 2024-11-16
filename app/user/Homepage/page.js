@@ -1,14 +1,15 @@
-import Navbar from "@/component/Navbar";
+import NavBarWrapper from "@/components/NavBarWrapper";
 
 
 const HomePage = () => {
-    return ( 
-        <div>
-         <Navbar/> 
-        <h1> Home page </h1>
-        <p>Welcome Here</p>
-        </div>
-     );
+   return (
+     <NavBarWrapper>
+       <div>
+         <h1> Home page </h1>
+         <p>Welcome Here</p>
+       </div>
+     </NavBarWrapper>
+   );
 }
  
 export default HomePage;
