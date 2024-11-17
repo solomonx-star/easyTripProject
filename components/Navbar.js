@@ -66,6 +66,7 @@ const Navbar = () => {
 
       {/* Navigation Links */}
       <ul className="flex items-center gap-x-6">
+        {" "}
         {links.map((link) => (
           <li key={link.href}>
             <Link href={link.href}>
@@ -103,13 +104,13 @@ const Navbar = () => {
               <FaRegUser size={26} />
             </div>
 
-            <DropdownMenu className="bg-red-500">
+            <DropdownMenu className="">
               <DropdownMenuTrigger asChild>
                 <button>
                   <FaChevronDown />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
+              <DropdownMenuContent className="">
                 {/* <DropdownMenuLabel>Panel Position</DropdownMenuLabel> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup
@@ -131,7 +132,7 @@ const Navbar = () => {
                     <Link href="/user/Homepage/Help">Help / support</Link>
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem className="border-b gap-4">
-                    <IoSettingsOutline size={15} /> 
+                    <IoSettingsOutline size={15} />
                     <Link href="/user/Homepage/Settings">Settings</Link>
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem className="gap-4">
