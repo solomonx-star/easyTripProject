@@ -11,13 +11,15 @@ const HomePage = () => {
    return (
      <NavBarWrapper>
        <div>
-         <LandingSection />
-       </div>
-       <div>
-         <HowItWorks />
-       </div>
-       <div>
-         <PopularDestinations />
+         <div>
+           <LandingSection />
+         </div>
+         <div>
+           <PopularDestinations />
+         </div>
+         <div>
+           <HowItWorks />
+         </div>
        </div>
      </NavBarWrapper>
    );

@@ -1,11 +1,11 @@
 const HowItWorks = () => {
     return (
-      <div className="py-10">
+      <div className="pb-10 mt-[5%]">
         {/* Section Heading */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">How it Works</h1>
           <p className="text-gray-600">
-            Explore our "How it Works" section to discover the simplicity <br />
+            Explore our &quot;How it Works&quot; section to discover the simplicity <br />
             behind securing your travel tickets.
           </p>
         </div>
