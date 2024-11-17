@@ -14,6 +14,7 @@ import { RiLogoutCircleRLine } from "react-icons/ri";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MdDashboard } from "react-icons/md";
 
+
 const SideBar = () => {
   const { logout, user } = useAuth();
   const pathname = usePathname();
@@ -51,7 +52,6 @@ const SideBar = () => {
           </p>
         </div>
       </div>
-
       <nav className="">
         <ul className="mt-11">
           <div className="space-y-5">
@@ -82,6 +82,7 @@ const SideBar = () => {
           <span className="text-base font-medium flex-1">Logout</span>
         </Button>
       </div>
+      
     </div>
   );
 };
