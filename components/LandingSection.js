@@ -21,7 +21,7 @@ const LandingSection = () => {
 
         {/* Subtitle */}
         <p className="text-lg mt-15 max-w-xl font-light">
-          "Effortless Bookings at your fingertips: Your Ticket to Stress-Free Travel!"
+          Effortless Bookings at your fingertips: Your Ticket to Stress-Free Travel!
         </p>
 
         {/* Booking Form */}
