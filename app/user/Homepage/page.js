@@ -5,6 +5,7 @@ import PopularDestinations from "@/components/PopularDestination";
 // import Navbar from "@/component/Navbar";
 import NavBarWrapper from "@/components/NavBarWrapper";
 import Breadcrumb from "@/components/BreadCrumb";
+import PlanYourTrip from "@/components/PlanYourTrip";
 
 
 const HomePage = () => {
@@ -13,6 +14,9 @@ const HomePage = () => {
        <div>
          <div>
            <LandingSection />
+         </div>
+         <div>
+           <PlanYourTrip />
          </div>
          <div>
            <PopularDestinations />

@@ -17,5 +17,5 @@ export function middleware(request) {
 
 // Apply middleware only to protected routes
 export const config = {
-  matcher: ["/user/Homepage", "/booking"], // Adjust paths as needed
+  matcher: ["/user/Homepage/Help", "/booking"], // Adjust paths as needed
 };

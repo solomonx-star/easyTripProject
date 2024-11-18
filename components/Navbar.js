@@ -22,14 +22,14 @@ import {
 import { useAuth } from "@/context/userContext";
 
 const Navbar = () => {
-  const [position, setPosition] = useState("bottom")
+  const [position, setPosition] = useState("bottom");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // const toggleDropdown = () => {
   //   setIsDropdownOpen(!isDropdownOpen);
   // };
 
-  const { logout } = useAuth();
+  const { logout, authState } = useAuth();
 
   const router = useRouter();
 
@@ -55,7 +55,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 shadow-md bg-white">
+    <nav className="flex items-center justify-between px-6 py-4 shadow-md bg-[#F9ECE4]">
       {/* Logo Section */}
       <div className="flex items-center">
         {/* <img src={tripLogo} alt="Logo" className="w-10 h-10 mr-2" /> */}
@@ -90,7 +90,7 @@ const Navbar = () => {
       <div className="flex items-center gap-3">
         {/* Book Ticket Button */}
         <button
-          type="button"
+          // type="button"
           onClick={() => router.push("/ticket")}
           className="bg-[#189AA7] px-4 py-2 text-white rounded hover:bg-[#102021] font-medium"
         >
@@ -98,57 +98,96 @@ const Navbar = () => {
         </button>
 
         {/* Dropdown Menu */}
-        <div className="relative ">
+        {authState.isAuthenticated ? (
+          <div className="relative ">
+            <div className="flex items-center gap-2">
+              <div className="h-10 w-10 items-center justify-center flex rounded-full text-gray-700 border ">
+                <FaRegUser size={26} />
+              </div>
+
+              <DropdownMenu className="">
+                <DropdownMenuTrigger asChild>
+                  <button>
+                    <FaChevronDown />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="">
+                  {/* <DropdownMenuLabel>Panel Position</DropdownMenuLabel> */}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuRadioGroup
+                    value={position}
+                    onValueChange={setPosition}
+                  >
+                    <DropdownMenuRadioItem className="border-b gap-4">
+                      <FaRegUser size={15} />
+                      <Link href="/user/Homepage/Profile">Profile</Link>
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem className="border-b gap-4">
+                      <MdHistory size={15} />
+                      <Link href="/user/Homepage/BookingHistory">
+                        Booking History
+                      </Link>
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem className="border-b gap-4">
+                      <BiSupport size={15} />
+                      <Link href="/user/Homepage/Help">Help / support</Link>
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem className="border-b gap-4">
+                      <IoSettingsOutline size={15} />
+                      <Link href="/user/Homepage/Settings">Settings</Link>
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem className="gap-4">
+                      <MdOutlineLogout size={15} />
+                      <button onClick={logout}>Logout</button>
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            {/* Dropdown Items */}
+            {/* {isDropdownOpen && ( */}
+
+            {/* )} */}
+          </div>
+        ) : (
           <div className="flex items-center gap-2">
             <div className="h-10 w-10 items-center justify-center flex rounded-full text-gray-700 border ">
               <FaRegUser size={26} />
             </div>
-
-            <DropdownMenu className="">
-              <DropdownMenuTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
                 <button>
                   <FaChevronDown />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="">
-                {/* <DropdownMenuLabel>Panel Position</DropdownMenuLabel> */}
+              <DropdownMenuContent className="flex justify-center items-center">
                 <DropdownMenuSeparator />
                 <DropdownMenuRadioGroup
                   value={position}
                   onValueChange={setPosition}
                 >
-                  <DropdownMenuRadioItem className="border-b gap-4">
-                    <FaRegUser size={15} />
-                    <Link href="/user/Homepage/Profile">Profile</Link>
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem className="border-b gap-4">
-                    <MdHistory size={15} />
-                    <Link href="/user/Homepage/BookingHistory">
-                      Booking History
+                  <DropdownMenuRadioItem className="border-b">
+                    <Link
+                      className="p-2 flex justify-center items-center w-[110px] "
+                      href="/user/Signup"
+                    >
+                      Sign up
                     </Link>
                   </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem className="border-b gap-4">
-                    <BiSupport size={15} />
-                    <Link href="/user/Homepage/Help">Help / support</Link>
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem className="border-b gap-4">
-                    <IoSettingsOutline size={15} />
-                    <Link href="/user/Homepage/Settings">Settings</Link>
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem className="gap-4">
-                    <MdOutlineLogout size={15} />
-                    <button onClick={logout}>Logout</button>
+                  <DropdownMenuRadioItem className="">
+                    <Link
+                      className="bg-[#189AA7] p-2 flex justify-center items-center w-[110px]"
+                      href="/user/Login"
+                    >
+                      Login
+                    </Link>
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
-          {/* Dropdown Items */}
-          {/* {isDropdownOpen && ( */}
-
-          {/* )} */}
-        </div>
+        )}
       </div>
     </nav>
   );

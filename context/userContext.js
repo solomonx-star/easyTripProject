@@ -12,47 +12,91 @@ export const useAuth = () => useContext(AuthContext);
 
 // AuthProvider component to wrap around the app
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  const [authState, setAuthState] = useState({
+    isAuthenticated: false,
+    user: null,
+    token: null,
+  });
   const router = useRouter();
 
   // Function to handle login
   const login = (user, token) => {
-    setUser(user);
-    setToken(token);
+    setAuthState({ isAuthenticated: true, user, token });
     // Save token and user data to cookies for persistence
-    Cookies.set("authToken", token, { expires: 7 }); // Cookie expires in 7 days
-    Cookies.set("user", JSON.stringify(user), { expires: 7 });
-    if (user.role === "admin") {
-      router.push("/admin/dashboard");
-    } else {
-      router.push("/user/Homepage ");
-    }
-    
+    Cookies.set("authToken", token, { expires: 2 }); // Cookie expires in 7 days
+    Cookies.set("user", JSON.stringify(user), { expires: 2 });
+    router.push(user.role === "admin" ? "/admin/dashboard" : "/user/Homepage");
   };
 
   // Function to handle logout
   const logout = () => {
-    setUser(null);
-    setToken(null);
+    const userRole = authState.user?.role;
+
+    setAuthState({ isAuthenticated: false, user: null, token: null });
     Cookies.remove("authToken"); // Remove the token cookie
-    Cookies.remove("user"); // Remove the user cookie
-    router.push("/admin/login"); // Redirect to login page
+    Cookies.remove("user");
+    if (userRole === "customer") {
+      router.push("/user/Homepage");
+    } else if (userRole === "admin") {
+      router.push("/admin/login");
+    } else {
+      router.push("/");
+    }
+
+    // Redirect to login page
   };
 
-  // Check for token and user data on component mount
   useEffect(() => {
-    const savedToken = Cookies.get("authToken");
-    const savedUserData = Cookies.get("user");
+    const initializeAuth = async () => {
+      const savedToken = Cookies.get("authToken");
+      const savedUser = Cookies.get("user");
 
-    if (savedToken && savedUserData) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUserData));
-    }
+      if (savedToken && savedUser) {
+        try {
+          const res = await fetch("/api/auth/authenticate", {
+            credentials: "include",
+          });
+          if (res.ok) {
+            setAuthState({
+              isAuthenticated: true,
+              user: JSON.parse(savedUser),
+              token: savedToken,
+            });
+          } else {
+            logout();
+          }
+        } catch (error) {
+          console.error("Error during authentication check:", error);
+          logout();
+        }
+      }
+    };
+
+    initializeAuth();
   }, []);
 
+  //  useEffect(() => {
+  //    // Check authentication (e.g., via cookies)
+  //    const checkAuth = async () => {
+  //      try {
+  //        const res = await fetch("/api/auth/authenticate", { credentials: "include" }); // API to verify auth
+  //        if (res.ok) {
+  //          const data = await res.json();
+  //          setAuthState({ isAuthenticated: true, user: data.user });
+  //        } else {
+  //          setAuthState({ isAuthenticated: false, user: null });
+  //        }
+  //      } catch (error) {
+  //        console.error("Error checking auth:", error);
+  //        setAuthState({ isAuthenticated: false, user: null });
+  //      }
+  //    };
+
+  //    checkAuth();
+  //  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ authState, setAuthState, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
