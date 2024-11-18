@@ -5,7 +5,7 @@ export default function PlanYourTrip() {
   const destinations = [
     { from: "Freetown", to: "Lunsar", price: "Nle 80", img: "/freetown.jpeg" },
     { from: "Makeni", to: "Freetown", price: "Nle 120", img: "/makeni.jpeg" },
-    { from: "Kenema", to: "Freetown", price: "Nle 150", img: "/Kenema.jpeg" },
+    { from: "Kenema", to: "Freetown", price: "Nle 150", img: "/Kenemaa.jpeg" },
     { from: "Bo", to: "Makeni", price: "Nle 140", img: "/kono.jpeg" },
   ];
 
@@ -48,7 +48,7 @@ export default function PlanYourTrip() {
               </div>
               <div className="mt-4">
                 <Link className="bg-[#21C4D3] text-white rounded p-2" href="/">
-                  Book Now
+                  Reserve
                 </Link>
               </div>
             </div>
