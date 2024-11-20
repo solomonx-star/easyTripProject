@@ -12,28 +12,45 @@ import { FaLanguage } from "react-icons/fa";
 import { FaUsers, FaBus } from "react-icons/fa";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { MdDashboard } from "react-icons/md";
+import {
+  Clock,
+  BusFront,
+  Users,
+  LayoutDashboard,
+  LogOut,
+  CalendarCheck,
+} from "lucide-react";
 
 
 const SideBar = () => {
-  const { logout, user } = useAuth();
+  const { logout, authState } = useAuth();
   const pathname = usePathname();
 
   const links = [
     {
       href: "/admin/dashboard",
       label: "Dashboard",
-      icon: <MdDashboard size={20} color="white" />,
+      icon: <LayoutDashboard size={20} color="white" />,
     },
     {
       href: "/admin/Bookings",
-      label: "Bookings",
-      icon: <FaBus size={20} color="white" />,
+      label: "Booking",
+      icon: <CalendarCheck size={20} color="white" />,
+    },
+    {
+      href: "/admin/Schedule",
+      label: "Schedule",
+      icon: <Clock size={20} color="white" />,
+    },
+    {
+      href: "/admin/VehicleManagement",
+      label: "Vehicle Management",
+      icon: <BusFront size={20} color="white" />,
     },
     {
       href: "/admin/Users",
-      label: "Users",
-      icon: <FaUsers size={20} color="white" />,
+      label: "Customer Management",
+      icon: <Users size={20} color="white" />,
     },
   ];
     
@@ -42,13 +59,13 @@ const SideBar = () => {
   return (
     <div className="flex flex-col bg-[#189AA7] h-screen w-[250px] pt-8 p-7 ">
       <div className="flex flex-col items-center space-y-3 justify-center">
-        <Avatar>
-          <AvatarImage src={user?.ProfilePhoto} />
+        <Avatar className="h-[80px] w-[80px]">
+          <AvatarImage src={authState.user?.ProfilePhoto} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div>
           <p className="text-xs text-white font-thin">
-            Welcome {user?.username}
+            Welcome {authState.user?.username}
           </p>
         </div>
       </div>
@@ -62,7 +79,7 @@ const SideBar = () => {
                     className={
                       pathname === link.href
                         ? "bg-[#21C4D3] w-[222px] p-2 rounded-bl rounded-tl text-black"
-                        : "p-2"
+                        : "p-2 w-[222px]"
                     }
                   >
                     <div className="flex items-center gap-3">
@@ -78,11 +95,10 @@ const SideBar = () => {
       </nav>
       <div className="mt-auto">
         <Button className="w-full" variant="outline" size="lg" onClick={logout}>
-          <RiLogoutCircleRLine className="mr-2" size={20} />
+          <LogOut size={20} className="mr-2" />
           <span className="text-base font-medium flex-1">Logout</span>
         </Button>
       </div>
-      
     </div>
   );
 };

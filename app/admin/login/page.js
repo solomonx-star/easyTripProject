@@ -88,12 +88,11 @@ export default function Login() {
 
   return (
     <div className="pt-[200px] flex items-center justify-center ">
-      <div className="shadow-md w-[25%] space-y-[20px] p-[60px] rounded-md">
+      <div className="shadow-md bg-gray-100 w-[25%] space-y-[20px] p-[60px] rounded-md">
         {showModal && (
           <div className="relative flex items-center justify-center">
             <div className="w-[250px] h-[] p-4 rounded-lg absolute bottom-1 text-center">
-              <p className="text-xs text-green-500 ">
-                Login Successful!</p>
+              <p className="text-xs text-green-500 ">Login Successful!</p>
             </div>
           </div>
         )}
@@ -107,7 +106,7 @@ export default function Login() {
               name="phoneNumber"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel className="">Phone Number</FormLabel>
+                  {/* <FormLabel className="text-gray-500">Phone Number</FormLabel> */}
                   <FormControl>
                     <Input placeholder="Enter Phone Number" {...field} />
                   </FormControl>
@@ -121,8 +120,8 @@ export default function Login() {
               name="password"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
+                  {/* <FormLabel className="text-gray-500">Password</FormLabel> */}
+                  <FormControl className="mt-7">
                     <Input placeholder="Enter Password" {...field} />
                   </FormControl>
                   <FormDescription></FormDescription>
@@ -131,7 +130,7 @@ export default function Login() {
               )}
             />
             <div className="">
-              <Button size="lg" type="submit">
+              <Button className="bg-[#21C4D3] mt-3" size="lg" type="submit">
                 {loading ? <p>Login</p> : <Spinner size="sm" color="white" />}
               </Button>
             </div>

@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }) => {
   // Function to handle logout
   const logout = () => {
     const userRole = authState.user?.role;
+    console.log(userRole)
+    // console.log(user.role)
 
     setAuthState({ isAuthenticated: false, user: null, token: null });
     Cookies.remove("authToken"); // Remove the token cookie
@@ -53,9 +55,12 @@ export const AuthProvider = ({ children }) => {
 
       if (savedToken && savedUser) {
         try {
-          const res = await fetch("/api/auth/authenticate", {
-            credentials: "include",
-          });
+          const res = await fetch(
+            "https://easytrip-salone.up.railway.app/api/auth/authenticate",
+            {
+              credentials: "include",
+            }
+          );
           if (res.ok) {
             setAuthState({
               isAuthenticated: true,
