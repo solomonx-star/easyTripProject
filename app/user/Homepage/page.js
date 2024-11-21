@@ -6,6 +6,7 @@ import PopularDestinations from "@/components/PopularDestination";
 import NavBarWrapper from "@/components/NavBarWrapper";
 import Breadcrumb from "@/components/BreadCrumb";
 import WhyChooseUs from "@/components/whyChooseUS";
+import Footer from "@/components/Footer";
 
 
 const HomePage = () => {
@@ -25,6 +26,7 @@ const HomePage = () => {
           <WhyChooseUs/>
          </div>
        </div>
+       <Footer/>
      </NavBarWrapper>
    );
 }
