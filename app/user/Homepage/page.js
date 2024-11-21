@@ -26,7 +26,6 @@ const HomePage = () => {
           <WhyChooseUs/>
          </div>
        </div>
-       <Footer/>
      </NavBarWrapper>
    );
 }

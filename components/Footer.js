@@ -4,7 +4,7 @@ import { FiPhoneCall, FiMail } from "react-icons/fi";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-10">
+    <footer className="bg-gray-900 text-white py-10 mt-auto">
       <div className="container mx-auto px-5">
         {/* Top Section */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
