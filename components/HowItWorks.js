@@ -1,6 +1,6 @@
 const HowItWorks = () => {
     return (
-      <div className="pb-10 mt-[5%]">
+      <div className="pb-5 mt-[5%]">
         {/* Section Heading */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">How it Works</h1>
