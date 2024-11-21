@@ -21,31 +21,51 @@ import Link from "next/link";
 import Image from "next/image";
 import { Spinner } from "@nextui-org/spinner";
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
-const formSchema = z.object({
-  phoneNumber: z
-    .string()
-    .min(2, { message: "Phone must start with +232" })
-    .max(20),
-  username: z.string().min(2).max(20),
-  email: z.string().min(2).max(20),
-  password: z.string().min(2).max(20),
-});
+const formSchema = z
+  .object({
+    firstName: z.string().min(2).max(20),
+    lastName: z.string().min(2).max(20),
+    phoneNumber: z
+      .string()
+      .min(2, { message: "Phone must start with +232" })
+      .max(20),
+    username: z.string().min(2).max(20),
+    email: z.string().email("invalid email"),
+    password: z.string().min(8, "Password must be 8 characters long"),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"], // Error will be associated with confirmPassword field
+    message: "Passwords do not match", // Custom error message
+  });
 
 export default function Login() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
   const { login } = useAuth();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      firstName: "",
+      lastName: "",
       phoneNumber: "",
       username: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
+
+  const {
+    // handleSubmit,
+    reset,
+    // formState: { errors },
+  } = form;
 
   async function onSubmit(values) {
     // setLoading(true);
@@ -64,7 +84,10 @@ export default function Login() {
 
       if (!response.ok) {
         throw new Error("Sign up failed");
+      } else {
+        reset();
       }
+      
 
       const data = await response.json();
       console.log(data);
@@ -87,10 +110,13 @@ export default function Login() {
       }, 2000);
 
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Sign up error:", error);
       setLoading(false);
     } 
   }
+
+  const toggleVisibility = () => setIsVisible((prev) => !prev);
+  const toggleVisible = () => setVisible((prev) => !prev);
 
   return (
     <div className=" flex items-center justify-center h-screen">
@@ -127,6 +153,44 @@ export default function Login() {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="space-y-8"
               >
+                <div className="flex justify-between">
+                  <FormField
+                    control={form.control}
+                    name="firstName"
+                    render={({ field }) => (
+                      <FormItem className="">
+                        <FormLabel className=""></FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="First Name"
+                            {...field}
+                            className="w-44"
+                          />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lastName"
+                    render={({ field }) => (
+                      <FormItem className="w-44">
+                        <FormLabel className=""></FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Last Name"
+                            {...field}
+                            className=""
+                          />
+                        </FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="phoneNumber"
@@ -188,7 +252,58 @@ export default function Login() {
                     <FormItem className="">
                       <FormLabel className=""></FormLabel>
                       <FormControl>
-                        <Input placeholder="Password" {...field} />
+                        <div className="relative">
+                          <Input
+                            placeholder="Password"
+                            type={isVisible ? "text" : "password"}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={toggleVisibility}
+                            className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                          >
+                            {isVisible ? (
+                              <EyeOff className="w-5 h-5" />
+                            ) : (
+                              <Eye className="w-5 h-5" />
+                            )}
+                          </button>
+                        </div>
+
+                        {/* <Eye /> */}
+                      </FormControl>
+                      <FormDescription></FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="confirmPassword"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className=""></FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            placeholder="confirm Password"
+                            type={visible ? "text" : "password"}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={toggleVisible}
+                            className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                          >
+                            {visible ? (
+                              <EyeOff className="w-5 h-5" />
+                            ) : (
+                              <Eye className="w-5 h-5" />
+                            )}
+                          </button>
+                        </div>
+                        {/* <Eye /> */}
                       </FormControl>
                       <FormDescription></FormDescription>
                       <FormMessage />
@@ -197,7 +312,12 @@ export default function Login() {
                 />
 
                 <div className="">
-                  <Button className="text-white" variant="secondary" size="lg" type="submit">
+                  <Button
+                    className="text-white"
+                    variant="secondary"
+                    size="lg"
+                    type="submit"
+                  >
                     Sign up
                     {/* {loading ? (
                       <p>Sign up</p>

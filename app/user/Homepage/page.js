@@ -7,6 +7,7 @@ import NavBarWrapper from "@/components/NavBarWrapper";
 import Breadcrumb from "@/components/BreadCrumb";
 import WhyChooseUs from "@/components/whyChooseUS";
 import Footer from "@/components/Footer";
+import PlanYourTrip from "@/components/PlanYourTrip";
 
 
 const HomePage = () => {
@@ -15,6 +16,9 @@ const HomePage = () => {
        <div>
          <div>
            <LandingSection />
+         </div>
+         <div>
+           <PlanYourTrip />
          </div>
          <div>
            <PopularDestinations />
