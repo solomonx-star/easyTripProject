@@ -8,7 +8,7 @@ const LandingSection = () => {
   return (
     <div
       className="relative md:h-[700px] h-[300px] bg-cover bg-center py-10"
-      style={{ backgroundImage: "url('/b.jpeg')" }}
+      style={{ backgroundImage: "url('/bus.png')" }}
     >
       {/* Overlay */}
       <div className="bg-black inset-0 opacity-60"></div>
