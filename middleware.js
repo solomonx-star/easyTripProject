@@ -8,7 +8,7 @@ export function middleware(request) {
   // Redirect to login if the token is missing
   console.log(token)
   if (!token) {
-    return NextResponse.redirect(new URL("/admin/login", request.url));
+    return NextResponse.redirect(new URL("/user/Homepage", request.url));
   }
 
   // If the token exists, allow the request to proceed

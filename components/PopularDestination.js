@@ -1,7 +1,15 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
+import "aos/dist/aos.css";
+import AOS from "aos";
 
 const PopularDestinations = () => {
+  useEffect(() => {
+    AOS.init({});
+  }, []);
+
   const destinations = [
     { name: "Freetown", price: "Nle 120", img: "/freetown.jpeg" },
     { name: "Makeni", price: "Nle 120", img: "/makeni.jpeg" },
@@ -11,14 +19,23 @@ const PopularDestinations = () => {
 
   return (
     <section className="pb-5 pt-10 mt-[5%]">
-      <h2 className="text-3xl font-bold text-center mb-8">Popular Destinations</h2>
+      <h2
+        data-aos-delay="900"
+        data-aos-duration="1000"
+        data-aos="fade-down"
+        className="text-3xl font-bold text-center mb-8"
+      >
+        Popular Destinations
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
         {destinations.map((destination, index) => (
           <div
+            data-aos-delay="900"
+            data-aos-duration="1000"
+            data-aos="fade-up"
             key={index}
             className="bg-white rounded-lg shadow-lg hover:shadow-xl transition duration-300 hover:bg-[#F9ECE4]"
           >
-            
             <img
               src={destination.img}
               alt={destination.name}

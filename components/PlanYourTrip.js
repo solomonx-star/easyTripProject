@@ -1,7 +1,24 @@
+"use client"
+
+
 import Link from "next/link";
 import { FaMapMarkerAlt, FaCalendarAlt, FaUser } from "react-icons/fa";
+import AOS from "aos";
+import { useEffect } from "react";
+import "aos/dist/aos.css";
+
 
 export default function PlanYourTrip() {
+
+
+  useEffect(() => {
+    AOS.init({duration: 1000});
+  }, [])
+
+
+
+
+
   const destinations = [
     { from: "Freetown", to: "Lunsar", price: "Nle 80", img: "/freetown.jpeg" },
     { from: "Makeni", to: "Freetown", price: "Nle 120", img: "/makeni.jpeg" },
@@ -10,13 +27,21 @@ export default function PlanYourTrip() {
   ];
 
   return (
-    <div className="justify-center items-center pb-10 pt-10 mt-[80%] md:mt-[5%]">
-      <h1 className="text-3xl font-bold text-center mb-8">
+    <div className="justify-center items-center pb-10 pt-10 mt-[40%] md:mt-[5%]">
+      <h1
+        data-aos-delay="900"
+        data-aos-duration="1000"
+        data-aos="fade-down"
+        className="text-3xl font-bold text-center mb-8"
+      >
         Plan Your trip with us
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4">
         {destinations.map((destination, index) => (
           <div
+            data-aos-delay="900"
+            data-aos-duration="1000"
+            data-aos="fade-up"
             key={index}
             className="bg-white rounded-lg shadow-lg hover:shadow-xl transition duration-300"
           >

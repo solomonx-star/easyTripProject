@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import Cookies from "js-cookie"; // Import js-cookie for cookie management
+import Cookies from "js-cookie";
+import axios from "axios";
 
 // Create the context
 export const AuthContext = createContext();
@@ -23,20 +24,20 @@ export const AuthProvider = ({ children }) => {
   const login = (user, token) => {
     setAuthState({ isAuthenticated: true, user, token });
     // Save token and user data to cookies for persistence
-    Cookies.set("authToken", token, { expires: 2 }); // Cookie expires in 7 days
-    Cookies.set("user", JSON.stringify(user), { expires: 2 });
+    Cookies.set("authToken", token, { expires: 2 }); // Cookie expires in 2 days
+    Cookies.set("_id", user._id, { expires: 2 }); // Save user ID
+    Cookies.set("user", JSON.stringify(user), { expires: 2 }); // Save user info
     router.push(user.role === "admin" ? "/admin/dashboard" : "/user/Homepage");
   };
 
   // Function to handle logout
   const logout = () => {
     const userRole = authState.user?.role;
-    console.log(userRole)
-    // console.log(user.role)
 
     setAuthState({ isAuthenticated: false, user: null, token: null });
     Cookies.remove("authToken"); // Remove the token cookie
-    Cookies.remove("user");
+    Cookies.remove("_id"); // Remove the user ID cookie
+    Cookies.remove("user"); // Remove the user cookie
     if (userRole === "customer") {
       router.push("/user/Homepage");
     } else if (userRole === "admin") {
@@ -44,61 +45,45 @@ export const AuthProvider = ({ children }) => {
     } else {
       router.push("/");
     }
-
-    // Redirect to login page
   };
 
+  // Initialize authentication on app load
   useEffect(() => {
-    const initializeAuth = async () => {
-      const savedToken = Cookies.get("authToken");
-      const savedUser = Cookies.get("user");
+    const token = Cookies.get("authToken");
+    const userId = Cookies.get("_id");
 
-      if (savedToken && savedUser) {
-        try {
-          const res = await fetch(
-            "https://easytrip-salone.up.railway.app/api/auth/authenticate",
-            {
-              credentials: "include",
-            }
-          );
-          if (res.ok) {
-            setAuthState({
-              isAuthenticated: true,
-              user: JSON.parse(savedUser),
-              token: savedToken,
-            });
-          } else {
-            logout();
+    const fetchUser = async () => {
+      if (!token || !userId) {
+        console.error("No token or user ID found in cookies");
+        logout(); // Logout if token or user ID is missing
+        return;
+      }
+
+      try {
+        // Fetch user data
+        const response = await axios.get(
+          `http://localhost:5000/api/auth/getUser/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        } catch (error) {
-          console.error("Error during authentication check:", error);
-          logout();
-        }
+        );
+
+        // Update authentication state
+        setAuthState({
+          isAuthenticated: true,
+          user: response.data,
+          token: token,
+        });
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        logout();
       }
     };
 
-    initializeAuth();
-  }, []);
-
-  //  useEffect(() => {
-  //    // Check authentication (e.g., via cookies)
-  //    const checkAuth = async () => {
-  //      try {
-  //        const res = await fetch("/api/auth/authenticate", { credentials: "include" }); // API to verify auth
-  //        if (res.ok) {
-  //          const data = await res.json();
-  //          setAuthState({ isAuthenticated: true, user: data.user });
-  //        } else {
-  //          setAuthState({ isAuthenticated: false, user: null });
-  //        }
-  //      } catch (error) {
-  //        console.error("Error checking auth:", error);
-  //        setAuthState({ isAuthenticated: false, user: null });
-  //      }
-  //    };
-
-  //    checkAuth();
-  //  }, []);
+    fetchUser();
+  }, []); // Run only on initial render
 
   return (
     <AuthContext.Provider value={{ authState, setAuthState, login, logout }}>

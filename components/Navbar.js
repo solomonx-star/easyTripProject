@@ -20,14 +20,47 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/userContext";
+import { X, Menu } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Navbar = () => {
   const [position, setPosition] = useState("bottom");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [navbar, setNavBar] = useState(false);
 
-  // const toggleDropdown = () => {
-  //   setIsDropdownOpen(!isDropdownOpen);
-  // };
+  const getMenu = () => {
+    let menuClasses = [];
+
+    if (navbar) {
+      menuClasses = [
+        "flex",
+        "absolute",
+        "top-[75px]",
+        "bg-black",
+        "bg-opacity-60",
+        "w-full",
+        "p-4",
+        "left-0",
+        "gap-3",
+        "flex-col",
+        "items-center",
+        "z-50",
+        ""
+      ];
+    } else {
+      menuClasses = [
+        "hidden",
+        "md:flex",
+        "gap-7",
+        "flex-1",
+        "justify-center",
+        "mr-16",
+        "items-center",
+      ];
+    }
+    return menuClasses.join(" ");
+  };
+
 
   const { logout, authState } = useAuth();
 
@@ -55,21 +88,23 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 shadow-md bg-[#F9ECE4]">
+    <nav className="flex relative items-center justify-between px-6 py-4 shadow-md bg-[#F9ECE4]">
       {/* Logo Section */}
       <div className="flex items-center">
         {/* <img src={tripLogo} alt="Logo" className="w-10 h-10 mr-2" /> */}
-        <span className="text-xl font-semibold text-gray-800">
+        <span className="font-bold text-sm md:text-xl md:font-semibold text-gray-800">
           <Link href="/">EasyTrip</Link>
         </span>
       </div>
 
       {/* Navigation Links */}
-      <ul className="flex items-center gap-x-6">
+      <ul className={getMenu()}>
         {" "}
         {links.map((link) => (
           <li key={link.href}>
-            <Link href={link.href}>
+            {/* <div className={}> */}
+            <Link className="" href={link.href}>
+              {/* <div className={}> */}
               <div
                 className={
                   pathname === link.href
@@ -78,10 +113,12 @@ const Navbar = () => {
                 }
               >
                 <div className="">
-                  <span className="text-black">{link.label}</span>
+                  <span className="text-white md:text-black">{link.label}</span>
                 </div>
               </div>
+              {/* </div> */}
             </Link>
+            {/* </div> */}
           </li>
         ))}
       </ul>
@@ -90,9 +127,8 @@ const Navbar = () => {
       <div className="flex items-center gap-3">
         {/* Book Ticket Button */}
         <button
-          // type="button"
-          onClick={() => router.push("/ticket")}
-          className="bg-[#189AA7] px-4 py-2 text-white rounded hover:bg-[#102021] font-medium"
+          onClick={() => router.push("/user/Homepage/Book")}
+          className="bg-[#189AA7] md:px-4 px-3 py-2 text-xs md:text-base md:py-2 text-white rounded hover:bg-[#102021] font-medium"
         >
           Book my Ticket
         </button>
@@ -101,8 +137,15 @@ const Navbar = () => {
         {authState.isAuthenticated ? (
           <div className="relative ">
             <div className="flex items-center gap-2">
-              <div className="h-10 w-10 items-center justify-center flex rounded-full text-gray-700 border ">
-                <FaRegUser size={26} />
+              <div className="md:h-10 md:w-10 h-5 w-5 items-center justify-center flex rounded-full text-gray-700 border ">
+                {authState.isAuthenticated ? (
+                  <Avatar className="md:h-[40px] md:w-[40px] w-[20px] h-[20px]">
+                    <AvatarImage src={authState.user?.profilePhoto} />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                ) : (
+                  <FaRegUser size={26} />
+                )}
               </div>
 
               <DropdownMenu className="">
@@ -144,11 +187,6 @@ const Navbar = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-
-            {/* Dropdown Items */}
-            {/* {isDropdownOpen && ( */}
-
-            {/* )} */}
           </div>
         ) : (
           <div className="flex items-center gap-2">
@@ -188,6 +226,24 @@ const Navbar = () => {
             </DropdownMenu>
           </div>
         )}
+
+        <div className="md:hidden flex items-center">
+          {navbar ? (
+            <button
+              onClick={() => setNavBar(!navbar)}
+              className="focus:outline-none"
+            >
+              <X />
+            </button>
+          ) : (
+            <button
+              onClick={() => setNavBar(!navbar)}
+              className="focus:outline-none"
+            >
+              <Menu />
+            </button>
+          )}
+        </div>
       </div>
     </nav>
   );
