@@ -4,5 +4,6 @@ import { redirect } from "next/navigation";
 
 
 export default function Home() {
-  return redirect("/admin/Users");
+  return redirect("/user/Homepage");
 }
+ 
