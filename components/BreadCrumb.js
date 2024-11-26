@@ -13,7 +13,7 @@ const Breadcrumb = () => {
       <ul className="flex items-center space-x-2">
         {/* Home Link */}
         <li>
-          <Link href="/user/Homepage" className="text-gray-400 hover:underline">
+          <Link href="/user/Homepage" className="text-gray-400 hover:underline text-3xl">
             Home
           </Link>
         </li>
@@ -22,10 +22,10 @@ const Breadcrumb = () => {
         {currentRoute && (
           <li className="flex items-center">
             {/* Separator */}
-            <span className="mx-1 text-gray-500">/</span>
+            <span className="mx-1 text-gray-500 text-3xl">/</span>
 
             {/* Current Segment */}
-            <span className="text-black text-base">
+            <span className="text-black text-3xl">
               {decodeURIComponent(currentRoute)}
             </span>
           </li>

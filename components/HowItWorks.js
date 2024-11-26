@@ -5,15 +5,21 @@ const HowItWorks = () => {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">How it Works</h1>
           <p className="text-gray-600">
-            Explore our &quot;How it Works&quot; section to discover the simplicity <br />
+            Explore our &quot;How it Works&quot; section to discover the
+            simplicity <br />
             behind securing your travel tickets.
           </p>
         </div>
-  
+
         {/* Steps */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-4 md:px-10">
           {/* Step 1 */}
-          <div className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-green-100 transition-transform duration-300 transform hover:-translate-y-2">
+          <div
+            data-aos-delay="900"
+            data-aos-duration="1000"
+            data-aos="fade-right"
+            className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-green-100 transition-transform duration-300 transform hover:-translate-y-2"
+          >
             <div className="mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -32,13 +38,18 @@ const HowItWorks = () => {
             </div>
             <h2 className="text-xl font-bold mb-2">Book Online</h2>
             <p className="text-gray-600">
-              With just a few clicks, you can reserve your travel tickets from the
-              comfort of your own home.
+              With just a few clicks, you can reserve your travel tickets from
+              the comfort of your own home.
             </p>
           </div>
-  
+
           {/* Step 2 */}
-          <div className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-blue-100 transition-transform duration-300 transform hover:-translate-y-2">
+          <div
+            data-aos-delay="900"
+            data-aos-duration="1000"
+            data-aos="fade-up"
+            className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-blue-100 transition-transform duration-300 transform hover:-translate-y-2"
+          >
             <div className="mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -60,9 +71,14 @@ const HowItWorks = () => {
               Instantly download or receive your tickets after booking online.
             </p>
           </div>
-  
+
           {/* Step 3 */}
-          <div className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-purple-100 transition-transform duration-300 transform hover:-translate-y-2">
+          <div
+            data-aos-delay="900"
+            data-aos-duration="1000"
+            data-aos="fade-up"
+            className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-purple-100 transition-transform duration-300 transform hover:-translate-y-2"
+          >
             <div className="mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -81,13 +97,18 @@ const HowItWorks = () => {
             </div>
             <h2 className="text-xl font-bold mb-2">View Your Bookings</h2>
             <p className="text-gray-600">
-              Manage your travel plans by viewing and editing your bookings at any
-              time.
+              Manage your travel plans by viewing and editing your bookings at
+              any time.
             </p>
           </div>
-  
+
           {/* Step 4 */}
-          <div className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-yellow-100 transition-transform duration-300 transform hover:-translate-y-2">
+          <div
+            data-aos-delay="900"
+            data-aos-duration="1000"
+            data-aos="fade-left"
+            className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-yellow-100 transition-transform duration-300 transform hover:-translate-y-2"
+          >
             <div className="mb-4">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
