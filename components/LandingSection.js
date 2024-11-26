@@ -7,6 +7,7 @@ import { FaMapMarkerAlt, FaCalendarAlt, FaUser } from "react-icons/fa";
 const LandingSection = () => {
   return (
     <div
+
       className="md:h-[700px] h-[600px] bg-cover bg-center "
       style={{ backgroundImage: "url('/Bus.jpg')" }}
     >
