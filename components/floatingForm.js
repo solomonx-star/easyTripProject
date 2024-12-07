@@ -1,7 +1,35 @@
+"use client"
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaCalendarAlt, FaMapMarkerAlt, FaUser } from "react-icons/fa";
 
 export default function FloatingForm() {
+
+  const router = useRouter();
+  const [searchParams, setSearchParams] = useState({
+    from: "",
+    to: "",
+    departing: "",
+    passenger: 1,
+  });
+
+  // Handle form changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchParams((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle search
+  const handleSearch = () => {
+    const queryString = new URLSearchParams(searchParams).toString();
+    console.log("Navigating to:", `/book?${queryString}`);
+    router.push(`/user/Homepage/Book?${queryString}`);
+  };
+
     return (
       <div className="md:bg-gray-200 grid grid-cols-2 bg-gray-200 self-center shadow-lg p-4 text-gray-800  md:flex flex-col gap-5 md:flex-row items-center md:space-x-5 text-center">
         {/* FROM Dropdown */}
@@ -14,9 +42,10 @@ export default function FloatingForm() {
             </label>
             <select className="w-full rounded-lg focus:outline-none focus:border-teal-500">
               <option value="">Select City</option>
-              <option value="city1">Makeni</option>
-              <option value="city2">Freetown</option>
-              <option value="city3">Bo</option>
+              <option value="Makeni">Makeni</option>
+              <option value="Freetown">Freetown</option>
+              <option value="Bo">Bo</option>
+              <option value="Kono">Kono</option>
             </select>
           </div>
         </div>
@@ -30,9 +59,10 @@ export default function FloatingForm() {
             </label>
             <select className="w-full rounded-lg focus:outline-none focus:border-teal-500">
               <option value="">Select City</option>
-              <option value="city1">Makeni</option>
-              <option value="city2">Freetown</option>
-              <option value="city3">Bo</option>
+              <option value="Makeni">Makeni</option>
+              <option value="Freetown">Freetown</option>
+              <option value="Bo">Bo</option>
+              <option value="Kono">Kono</option>
             </select>
           </div>
         </div>
@@ -69,12 +99,12 @@ export default function FloatingForm() {
 
         {/* Search Buses Button */}
 
-        <Link
-          href="/"
-          className="md:px-8 md:py-3 place-items-center item-center justify-center flex col-span-2 md:col-span-1 self-center bg-teal-500 text-white text-sm p-1 px-3 font-bold rounded shadow-lg hover:bg-teal-600 focus:outline-none"
+        <button
+          onClick={handleSearch}
+          className="md:px-8 md:py-3 place-items-center item-center justify-center flex col-span-2 md:col-span-1 self-center bg-[#189AA7] text-white text-sm p-1 px-3 font-bold rounded shadow-lg hover:bg-teal-600 focus:outline-none"
         >
           <p>Search Buses</p>
-        </Link>
+        </button>
       </div>
     );
 }

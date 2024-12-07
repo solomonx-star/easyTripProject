@@ -23,9 +23,13 @@ import {
 import { Button } from "@/components/ui/button";
 
 const formSchema = z.object({
-  country: z.string(),
-  city: z.string(),
-  gender: z.string(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().optional(),
+  username: z.string().optional(),
+  country: z.string().optional(),
+  city: z.string().optional(),
+  gender: z.string().optional(),
 });
 
 export default function Settings() {
@@ -155,7 +159,7 @@ export default function Settings() {
 
   return (
     <NavBarWrapper>
-      <div className="p-10 ">
+      <div className="p-10 mt-14">
         <Breadcrumb />
         <h1>Profile Update</h1>
         <div className="p-10 flex flex-col items-center ">

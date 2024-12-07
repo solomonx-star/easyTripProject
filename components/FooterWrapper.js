@@ -6,8 +6,8 @@ function NavBarWrapper({ children }) {
   return (
     <main>
       <div>
-        <Navbar />
         {children}
+        <Footer />
       </div>
     </main>
   );

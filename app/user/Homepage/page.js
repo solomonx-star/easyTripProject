@@ -8,28 +8,31 @@ import Breadcrumb from "@/components/BreadCrumb";
 import WhyChooseUs from "@/components/whyChooseUS";
 import Footer from "@/components/Footer";
 import PlanYourTrip from "@/components/PlanYourTrip";
+import FooterWrapper from "@/components/FooterWrapper"
 
 
 const HomePage = () => {
    return (
      <NavBarWrapper>
-       <div>
+       <FooterWrapper>
          <div>
-           <LandingSection />
+           <div>
+             <LandingSection />
+           </div>
+           <div>
+             <PlanYourTrip />
+           </div>
+           <div>
+             <PopularDestinations />
+           </div>
+           <div>
+             <HowItWorks />
+           </div>
+           <div>
+             <WhyChooseUs />
+           </div>
          </div>
-         <div>
-           <PlanYourTrip />
-         </div>
-         <div>
-           <PopularDestinations />
-         </div>
-         <div>
-           <HowItWorks />
-         </div>
-         <div>
-          <WhyChooseUs/>
-         </div>
-       </div>
+       </FooterWrapper>
      </NavBarWrapper>
    );
 }

@@ -24,9 +24,9 @@ export const AuthProvider = ({ children }) => {
   const login = (user, token) => {
     setAuthState({ isAuthenticated: true, user, token });
     // Save token and user data to cookies for persistence
-    Cookies.set("authToken", token, { expires: 2 }); // Cookie expires in 2 days
-    Cookies.set("_id", user._id, { expires: 2 }); // Save user ID
-    Cookies.set("user", JSON.stringify(user), { expires: 2 }); // Save user info
+    Cookies.set("authToken", token, { expires: 2, secure: true }); // Cookie expires in 2 days
+    Cookies.set("_id", user._id, { expires: 2, secure: true }); // Save user ID
+    Cookies.set("user", JSON.stringify(user), { expires: 2, secure: true }); // Save user info
     router.push(user.role === "admin" ? "/admin/dashboard" : "/user/Homepage");
   };
 
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 
     const fetchUser = async () => {
       if (!token || !userId) {
-        console.error("No token or user ID found in cookies");
+        // console.error("No token or user ID found in cookies");
         logout(); // Logout if token or user ID is missing
         return;
       }
@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
       try {
         // Fetch user data
         const response = await axios.get(
-          `http://localhost:5000/api/auth/getUser/${userId}`,
+          `https://easytrip-salone.up.railway.app/api/auth/getUser/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

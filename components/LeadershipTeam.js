@@ -4,13 +4,13 @@ import Image from "next/image";
 const LeadershipTeam = () => {
   const teamMembers = [
     {
-      name: "John Doe",
+      name: "Solomon Kanu",
       position: "CEO",
       note: "An innovative leader with a passion for transforming the travel industry.",
-      image: "/ceo.png",
+      image: "/sol.jpg",
     },
     {
-      name: "Jane Smith",
+      name: "Ibrahim Kamara",
       position: "CTO",
       note: "Driving technological excellence and innovation in every solution.",
       image: "/c.png",
