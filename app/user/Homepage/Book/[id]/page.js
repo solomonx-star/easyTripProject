@@ -36,13 +36,16 @@ export default function Result() {
     setIsLoading(true);
     setError(null);
 
-    await fetch(`http://localhost:5000/api/customer/book/${id}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authState.token}`,
-      },
-    })
+    await fetch(
+      `https://easytrip-salone.up.railway.app/api/customer/book/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authState.token}`,
+        },
+      }
+    )
       .then((response) => {
         console.log(response.data);
         alert("SUCCESSFULLY BOOKED");

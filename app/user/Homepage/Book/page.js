@@ -33,7 +33,7 @@ export default function Book() {
       try {
         // Send GET request to fetch users
         const response = await axios.get(
-          "http://localhost:5000/api/admin/book"
+          "https://easytrip-salone.up.railway.app/api/admin/book"
         );
 
         // Update state with fetched users
