@@ -88,10 +88,10 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="flex relative items-center justify-between px-6 py-4 shadow-md bg-[#F9ECE4]">
-      {/* Logo Section */}
+    <nav className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-4 shadow-md bg-[#F9ECE4]">
+      
       <div className="flex items-center">
-        {/* <img src={tripLogo} alt="Logo" className="w-10 h-10 mr-2" /> */}
+        
         <span className="font-bold text-sm md:text-xl md:font-semibold text-gray-800">
           <Link href="/">EasyTrip</Link>
         </span>
@@ -103,22 +103,16 @@ const Navbar = () => {
         {links.map((link) => (
           <li key={link.href}>
             {/* <div className={}> */}
-            <Link className="" href={link.href}>
-              {/* <div className={}> */}
-              <div
-                className={
-                  pathname === link.href
-                    ? " border-b-3 border-b-[#21C4D3] text-black"
-                    : ""
-                }
-              >
-                <div className="">
-                  <span className="text-white md:text-black">{link.label}</span>
-                </div>
-              </div>
-              {/* </div> */}
+            <Link
+              href={link.href}
+              className={`${
+                pathname === link.href
+                  ? "border-b-3 border-b-[#21C4D3] text-black"
+                  : ""
+              }`}
+            >
+              <span className="text-white md:text-black">{link.label}</span>
             </Link>
-            {/* </div> */}
           </li>
         ))}
       </ul>
@@ -155,12 +149,9 @@ const Navbar = () => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="">
-                  {/* <DropdownMenuLabel>Panel Position</DropdownMenuLabel> */}
+                  
                   <DropdownMenuSeparator />
-                  <DropdownMenuRadioGroup
-                    value={position}
-                    onValueChange={setPosition}
-                  >
+                  <DropdownMenuRadioGroup value="" onValueChange="">
                     <DropdownMenuRadioItem className="border-b gap-4">
                       <FaRegUser size={15} />
                       <Link href="/user/Homepage/Profile">Profile</Link>
@@ -194,7 +185,7 @@ const Navbar = () => {
               <FaRegUser size={26} />
             </div>
             <DropdownMenu>
-              <DropdownMenuTrigger>
+              <DropdownMenuTrigger asChild>
                 <button>
                   <FaChevronDown />
                 </button>
@@ -228,21 +219,13 @@ const Navbar = () => {
         )}
 
         <div className="md:hidden flex items-center">
-          {navbar ? (
-            <button
-              onClick={() => setNavBar(!navbar)}
-              className="focus:outline-none"
-            >
-              <X />
-            </button>
-          ) : (
-            <button
-              onClick={() => setNavBar(!navbar)}
-              className="focus:outline-none"
-            >
-              <Menu />
-            </button>
-          )}
+          <button
+            aria-label="Toggle Navigation Menu"
+            onClick={() => setNavBar(!navbar)}
+            className="focus:outline-none"
+          >
+            {navbar ? <X /> : <Menu />}
+          </button>
         </div>
       </div>
     </nav>

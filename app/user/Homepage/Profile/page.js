@@ -6,13 +6,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context/userContext";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { MapPin, CalendarDays } from "lucide-react";
+import { MapPin, CalendarDays} from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Profile() {
   const { authState } = useAuth();
   // const [user, setUser] = useState("");
+
+  const router = useRouter();
 
   const formatDate = (mongoDate) => {
     if (!mongoDate) return "N/A";
@@ -24,10 +28,9 @@ export default function Profile() {
     });
   };
 
-
   return (
     <NavBarWrapper>
-      <div className="pb-10">
+      <div className="pb-10 mt-14">
         <div className="flex-1 flex-col items-start justify-start p-7">
           <h1 className="font-bold text-5xl">My Profile</h1>
           <Breadcrumb />
@@ -123,10 +126,13 @@ export default function Profile() {
               <div></div>
             </div>
           </div>
-          <div className="flex-1 items-center  justify-center w-[80%]">
-            <button className="flex items-start justify-start bg-blue-500 p-3 px-6 rounded-md text-white">
+          <div className="">
+            <Link
+              href="/user/Homepage/Settings"
+              className="flex bg-blue-500 p-3 px-6 rounded-md text-white"
+            >
               Update Profile info
-            </button>
+            </Link>
           </div>
         </div>
       </div>
