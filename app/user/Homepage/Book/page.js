@@ -6,30 +6,47 @@ import axios from "axios";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaMapMarkerAlt, FaUser } from "react-icons/fa";
+import React, { Suspense } from "react";
 
-
-export default function Book() {
+function BookDetails() {
   const searchParams = useSearchParams();
   const from = searchParams.get("from");
   const to = searchParams.get("to");
   const date = searchParams.get("departing");
   const passenger = searchParams.get("passenger");
 
-
   const [book, setBook] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
 
   const router = useRouter();
 
+  // const handleDetails = (item) => {
+  //   // console.log(item._id)
+  // return  router.push(`/user/Homepage/Book/${item._id}?id=${item._id}&departureTime=${item.departureTime}&etaTime=${item.etaTime}&noOfSeats=${item.noOfSeats}&availableSeats=${item.availableSeats}&vehicleInfo=${item.vehicleInfo}&departureDate=${item.departureDate}&from=${item.from}&to=${item.to}&price=${item.price}`)
+  // }
+
   const handleDetails = (item) => {
-    // console.log(item._id)
-  return  router.push(`/user/Homepage/Book/${item._id}?id=${item._id}&departureTime=${item.departureTime}&etaTime=${item.etaTime}&noOfSeats=${item.noOfSeats}&availableSeats=${item.availableSeats}&vehicleInfo=${item.vehicleInfo}&departureDate=${item.departureDate}&from=${item.from}&to=${item.to}&price=${item.price}`)
-  }
+    const params = new URLSearchParams({
+      id: item._id,
+      departureTime: item.departureTime,
+      etaTime: item.etaTime,
+      noOfSeats: item.noOfSeats,
+      availableSeats: item.availableSeats,
+      vehicleInfo: item.vehicleInfo,
+      departureDate: item.departureDate,
+      from: item.from,
+      to: item.to,
+      price: item.price,
+    });
+    router.push(`/user/Homepage/Book/${item._id}?${params.toString()}`);
+  };
 
   console.log({ from, to, date, passenger });
 
   useEffect(() => {
     const fetchBookings = async () => {
+      setLoading(true);
       try {
         // Send GET request to fetch users
         const response = await axios.get(
@@ -41,17 +58,16 @@ export default function Book() {
       } catch (err) {
         console.error("Error fetching users:", err);
         setError(err.message);
+        setError(err.message);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     };
 
     fetchBookings();
   }, []);
 
- 
-
-   const handleChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     const params = new URLSearchParams(searchParams);
     if (value) {
@@ -68,7 +84,6 @@ export default function Book() {
       (!to || item.to === to) &&
       (!date || item.departureDate === date)
   );
-
 
   return (
     <NavBarWrapper>
@@ -88,6 +103,7 @@ export default function Book() {
                 value={from}
                 onChange={handleChange}
                 className="w-full rounded-lg focus:outline-none focus:border-teal-500"
+                aria-label="Select departure city"
               >
                 <option value="">{from || "Select City"}</option>
                 <option value="Makeni">Makeni</option>
@@ -110,6 +126,7 @@ export default function Book() {
                 value={to}
                 onChange={handleChange}
                 className="w-full rounded-lg focus:outline-none focus:border-teal-500"
+                aria-label="Select departure city"
               >
                 <option value="">{to || "Select City"}</option>
                 <option value="Makeni">Makeni</option>
@@ -149,7 +166,11 @@ export default function Book() {
                 value={passenger}
                 onChange={handleChange}
                 className="w-full rounded-lg focus:outline-none focus:border-teal-500"
+                aria-label="Select departure city"
               >
+                <option value="" disabled>
+                  Select Passenger
+                </option>
                 <option value="1">1 Adult</option>
                 <option value="2">2 Adults</option>
                 <option value="3">3 Adults</option>
@@ -171,70 +192,95 @@ export default function Book() {
         {/* Results Table */}
         <section className="  p-6 mt-16">
           <div className="overflow-x-auto">
-            {filteredResults.length > 0 ? (
-              <table className="w-full text-sm md:table-auto">
-                <thead className="bg-gray-200">
-                  <tr>
-                    <th className="border-b  px-4 py-2 text-left md:table-cell">
-                      Service Provider
-                    </th>
-                    <th className="border-b  px-4 py-2 text-left">
-                      Departure Time
-                    </th>
-                    <th className="border-b  px-4 py-2 text-left md:table-cell">
-                      Est. Arrival Time
-                    </th>
-                    <th className="border-b  px-4 py-2 text-left md:table-cell">
-                      Available Seats
-                    </th>
-                    <th className="border-b  px-4 py-2 text-center font-bold">
-                      Price
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredResults.map((item, idx) => (
-                    <tr key={idx} className="hover:bg-gray-100">
-                      <td className="px-4 py-2">
-                        <div className="flex flex-col gap-2">
-                          <p className="text-gray-500">{item.vehicleInfo}</p>
-                          <div className="flex gap-2">
-                            <p className="text-sm font-bold">Boarding Point:</p>
-                            <p className="text-sm text-gray-500">{item.from}</p>
-                          </div>
-                          <div className="flex gap-2">
-                            <p className="text-sm font-bold">Dropping Point:</p>
-                            <p className="text-sm text-gray-500">{item.to}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-2">{item.departureTime}</td>
-                      <td className="px-4 py-2 md:table-cell">
-                        {item.etaTime}
-                      </td>
-                      <td className="px-4 py-2 md:table-cell">
-                        {item.availableSeats}
-                      </td>
-                      <td className="px-4 py-5 flex flex-col gap-10 items-center">
-                        <p>Nle {item.price}</p>
-                        <button
-                          onClick={() => handleDetails(item)}
-                          className="bg-[#189AA7] text-white px-6 py-2 rounded-md shadow-sm"
-                        >
-                          View Seats
-                        </button>
-                      </td>
-                      <td className=" px-4 py-2 text-right"></td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {error && <p className="text-red-500">Error: {error}</p>}
+            {loading ? (
+              <p>Loading bookings...</p>
             ) : (
-              <p>No Results Found.</p>
+              <div className="overflow-x-auto">
+                {filteredResults.length > 0 ? (
+                  <table className="w-full text-sm md:table-auto">
+                    <thead className="bg-gray-200">
+                      <tr>
+                        <th className="border-b  px-4 py-2 text-left md:table-cell">
+                          Service Provider
+                        </th>
+                        <th className="border-b  px-4 py-2 text-left">
+                          Departure Time
+                        </th>
+                        <th className="border-b  px-4 py-2 text-left md:table-cell">
+                          Est. Arrival Time
+                        </th>
+                        <th className="border-b  px-4 py-2 text-left md:table-cell">
+                          Available Seats
+                        </th>
+                        <th className="border-b  px-4 py-2 text-center font-bold">
+                          Price
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredResults.map((item, idx) => (
+                        <tr key={idx} className="hover:bg-gray-100">
+                          <td className="px-4 py-2">
+                            <div className="flex flex-col gap-2">
+                              <p className="text-gray-500">
+                                {item.vehicleInfo}
+                              </p>
+                              <div className="flex gap-2">
+                                <p className="text-sm font-bold">
+                                  Boarding Point:
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {item.from}
+                                </p>
+                              </div>
+                              <div className="flex gap-2">
+                                <p className="text-sm font-bold">
+                                  Dropping Point:
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {item.to}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2">{item.departureTime}</td>
+                          <td className="px-4 py-2 md:table-cell">
+                            {item.etaTime}
+                          </td>
+                          <td className="px-4 py-2 md:table-cell">
+                            {item.availableSeats}
+                          </td>
+                          <td className="px-4 py-5 flex flex-col gap-10 items-center">
+                            <p>Nle {item.price}</p>
+                            <button
+                              onClick={() => handleDetails(item)}
+                              className="bg-[#189AA7] text-white px-6 py-2 rounded-md shadow-sm"
+                            >
+                              View Seats
+                            </button>
+                          </td>
+                          <td className=" px-4 py-2 text-right"></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p>No Results Found.</p>
+                )}
+              </div>
             )}
           </div>
         </section>
       </main>
     </NavBarWrapper>
+  );
+}
+
+export default function Book() {
+  return (
+    <Suspense>
+      <BookDetails />
+    </Suspense>
   );
 }
