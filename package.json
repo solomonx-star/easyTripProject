@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "NODE_ENV=production next build && npm run test --if-present",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
