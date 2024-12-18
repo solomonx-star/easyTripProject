@@ -7,7 +7,7 @@ const PaymentModal = ({ isOpen, onClose, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit({ cardNumber, expirationDate, cvv });
+    onSubmit({});
     onClose();
   };
 

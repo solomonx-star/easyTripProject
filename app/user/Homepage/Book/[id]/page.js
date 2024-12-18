@@ -69,6 +69,16 @@ const formatDate = (dateString) => {
 
   // Booking Function
   const handleBooking = async (id) => {
+
+
+    if (!authState || !authState.token) {
+      // Redirect to login or show an alert for unauthenticated users
+      alert("Please log in to book.");
+      router.push("/user/Login"); // Adjust the route to your login page
+      return;
+    }
+
+
     setIsLoading(true);
     setError(null);
 
@@ -293,7 +303,15 @@ const formatDate = (dateString) => {
             <div className="p-4 border-t flex flex-col items-center">
               <p className="text-lg font-bold mb-4">Nle {price}</p>
               <button
-                onClick={() => setIsPaymentModalOpen(true)}
+                // onClick={() => setIsPaymentModalOpen(true)}
+                onClick={() => {
+                  if (!authState || !authState.token) {
+                    alert("Please log in to book.");
+                    router.push("/user/Login"); // Redirect to login page
+                  } else {
+                    setIsPaymentModalOpen(true);
+                  }
+                }}
                 className="bg-[#189AA7] text-white px-6 py-2 rounded-md shadow-sm w-full"
               >
                 Book Now

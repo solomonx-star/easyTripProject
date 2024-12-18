@@ -89,8 +89,10 @@ export default function Login() {
         <div className="w-6/12 hidden md:block">
           <Image
             src={pic}
+            width={400}
+            height={400}
             alt="Login Background"
-            className="w-full h-full md:hidden object-cover"
+            className="w-full h-full "
             priority
           />
         </div>
