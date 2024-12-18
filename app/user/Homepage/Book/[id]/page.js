@@ -31,6 +31,42 @@ export default function Result() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+
+  try {
+    // If the date is already in the desired format, return it
+    if (/^[A-Za-z]{3} \d{1,2} \d{4}$/.test(dateString)) {
+      return dateString;
+    }
+
+    // Parse the date string directly into a Date object
+    const date = new Date(dateString);
+
+    // Check if the date is valid
+    if (isNaN(date.getTime())) {
+      return dateString; // Return the original string if invalid
+    }
+
+    // Format the date
+    return date.toLocaleDateString("en-US", {
+      month: "short", // Jan, Feb, etc.
+      day: "numeric", // 1, 2, etc.
+      year: "numeric", // 2024
+    });
+  } catch (error) {
+    console.error("Date formatting error:", error);
+    return dateString;
+  }
+};
+
+
+  const formattedDate = formatDate(departureDate);
+
+  console.log(formattedDate);
+
+
   // Booking Function
   const handleBooking = async (id) => {
     setIsLoading(true);
@@ -154,14 +190,14 @@ export default function Result() {
           </button>
         </div>
         <section className=" bg-white">
-          <div className="flex gap-9 p-4 border-b">
+          <div className="flex gap-9 p-4 border-b justify-center items-center">
             <p className="font-bold text-lg">{from}</p>
             <p className="font-bold text-lg">-</p>
             <p className="font-bold text-lg">{to}</p>
           </div>
-          <div className="mt-10">
+          <div className="mt-10 hidden md:block">
             <table className="w-full text-sm">
-              <thead className="">
+              <thead>
                 <tr>
                   <th className="border-b  px-4 py-2 text-left">
                     Vehicle Type
@@ -182,16 +218,16 @@ export default function Result() {
                   <td className="px-4 py-4">{vehicleInfo}</td>
                   <td className="px-4 py-4">
                     <p className="text-gray-500">{departureTime}</p>
-                    <p className="text-gray-500">{departureDate}</p>
+                    <p className="text-gray-500">{formattedDate}</p>
                     <p className="text-gray-500">{from}</p>
                   </td>
-                  <td className="px-4 py-4">
+                  <td className="px-4 py-4 items-center gap-2">
                     <MoveRight size={35} color="gray" />
                     <p className="text-gray-500">5 hrs</p>
                   </td>
                   <td className="px-4 py-4">
                     <p className="text-gray-500">{etaTime}</p>
-                    <p className="text-gray-500">{departureDate}</p>
+                    <p className="text-gray-500">{formattedDate}</p>
                     <p className="text-gray-500">{to}</p>
                   </td>
                   <td className="px-4 py-4 text-center text-gray-500">
@@ -205,7 +241,7 @@ export default function Result() {
                       // }}
                       onClick={() => setIsPaymentModalOpen(true)}
                       //   disabled={isLoading}
-                      className="bg-blue-500 text-white px-6 py-2 rounded-md shadow-sm disabled:bg-gray-300"
+                      className="bg-[#189AA7] text-white px-6 py-2 rounded-md shadow-sm disabled:bg-gray-300"
                     >
                       Book Now
                     </button>
@@ -215,12 +251,60 @@ export default function Result() {
             </table>
           </div>
         </section>
+        {/* Mobile layout */}
+
+        <div className="block md:hidden p-4">
+          <div className="bg-white border rounded-lg shadow-md">
+            <div className="p-4 border-b">
+              <p className="text-xl font-bold">{vehicleInfo}</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 p-4">
+              <div>
+                <p className="text-sm font-semibold">Departure</p>
+                <p className="text-gray-500">{departureTime}</p>
+                <p className="text-gray-500">{formattedDate}</p>
+                <p className="text-gray-500">{from}</p>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold">Estimated Arrival</p>
+                <p className="text-gray-500">{etaTime}</p>
+                <p className="text-gray-500">{formattedDate}</p>
+                <p className="text-gray-500">{to}</p>
+              </div>
+            </div>
+
+            <div className="flex justify-between p-4 border-t">
+              <div>
+                <p className="text-sm font-semibold">Duration</p>
+                <div className="flex items-center gap-2">
+                  {/* <MoveRight size={25} color="gray" /> */}
+                  <p className="text-gray-500">3 hrs</p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm font-semibold">Available Seats</p>
+                <p className="text-center text-gray-500">{availableSeats}</p>
+              </div>
+            </div>
+
+            <div className="p-4 border-t flex flex-col items-center">
+              <p className="text-lg font-bold mb-4">Nle {price}</p>
+              <button
+                onClick={() => setIsPaymentModalOpen(true)}
+                className="bg-[#189AA7] text-white px-6 py-2 rounded-md shadow-sm w-full"
+              >
+                Book Now
+              </button>
+            </div>
+          </div>
+        </div>
         {error && (
           <p className="text-red-500 mt-4 text-center">Error: {error}</p>
         )}
         <div>
-
-
           <PaymentModal
             isOpen={isPaymentModalOpen}
             onClose={() => setIsPaymentModalOpen(false)}

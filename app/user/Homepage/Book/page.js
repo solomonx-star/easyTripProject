@@ -198,19 +198,19 @@ function BookDetails() {
             ) : (
               <div className="overflow-x-auto">
                 {filteredResults.length > 0 ? (
-                  <table className="w-full text-sm md:table-auto">
-                    <thead className="bg-gray-200">
+                  <table className="w-full text-sm">
+                    <thead className="bg-gray-200 hidden md:table-header-group">
                       <tr>
-                        <th className="border-b  px-4 py-2 text-left md:table-cell">
+                        <th className="border-b  px-4 py-2 text-left ">
                           Service Provider
                         </th>
                         <th className="border-b  px-4 py-2 text-left">
                           Departure Time
                         </th>
-                        <th className="border-b  px-4 py-2 text-left md:table-cell">
+                        <th className="border-b  px-4 py-2 text-left">
                           Est. Arrival Time
                         </th>
-                        <th className="border-b  px-4 py-2 text-left md:table-cell">
+                        <th className="border-b  px-4 py-2 text-left">
                           Available Seats
                         </th>
                         <th className="border-b  px-4 py-2 text-center font-bold">
@@ -220,8 +220,18 @@ function BookDetails() {
                     </thead>
                     <tbody>
                       {filteredResults.map((item, idx) => (
-                        <tr key={idx} className="hover:bg-gray-100">
-                          <td className="px-4 py-2">
+                        <tr
+                          key={idx}
+                          className="hover:bg-gray-100 block md:table-row border-b md:border-none"
+                        >
+                          {/* Mobile Card Layout */}
+                          <td
+                            className="block md:table-cell px-4 py-4 md:p-2"
+                            data-label="Service Provider"
+                          >
+                            <div className="md:hidden font-bold mb-2">
+                              Service Provider
+                            </div>
                             <div className="flex flex-col gap-2">
                               <p className="text-gray-500">
                                 {item.vehicleInfo}
@@ -244,23 +254,58 @@ function BookDetails() {
                               </div>
                             </div>
                           </td>
-                          <td className="px-4 py-2">{item.departureTime}</td>
-                          <td className="px-4 py-2 md:table-cell">
+
+                          {/* Departure Time */}
+                          <td
+                            className="block md:table-cell px-4 py-2"
+                            data-label="Departure Time"
+                          >
+                            <div className="md:hidden font-bold mb-2">
+                              Departure Time
+                            </div>
+                            {item.departureTime}
+                          </td>
+
+                          {/* Estimated Arrival Time */}
+                          <td
+                            className="block md:table-cell px-4 py-2"
+                            data-label="Est. Arrival Time"
+                          >
+                            <div className="md:hidden font-bold mb-2">
+                              Est. Arrival Time
+                            </div>
                             {item.etaTime}
                           </td>
-                          <td className="px-4 py-2 md:table-cell">
+
+                          {/* Available Seats */}
+                          <td
+                            className="block md:table-cell px-4 py-2"
+                            data-label="Available Seats"
+                          >
+                            <div className="md:hidden font-bold mb-2">
+                              Available Seats
+                            </div>
                             {item.availableSeats}
                           </td>
-                          <td className="px-4 py-5 flex flex-col gap-10 items-center">
-                            <p>Nle {item.price}</p>
-                            <button
-                              onClick={() => handleDetails(item)}
-                              className="bg-[#189AA7] text-white px-6 py-2 rounded-md shadow-sm"
-                            >
-                              View Seats
-                            </button>
+
+                          {/* Price and Action */}
+                          <td
+                            className="block md:table-cell px-4 py-4 text-center"
+                            data-label="Price"
+                          >
+                            <div className="md:hidden font-bold mb-2">
+                              Price
+                            </div>
+                            <div className="flex flex-col gap-2 items-center">
+                              <p>Nle {item.price}</p>
+                              <button
+                                onClick={() => handleDetails(item)}
+                                className="bg-[#189AA7] text-white px-6 py-2 rounded-md shadow-sm w-full md:w-auto"
+                              >
+                                View Seats
+                              </button>
+                            </div>
                           </td>
-                          <td className=" px-4 py-2 text-right"></td>
                         </tr>
                       ))}
                     </tbody>
