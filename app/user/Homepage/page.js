@@ -15,7 +15,7 @@ const HomePage = () => {
    return (
      <NavBarWrapper>
        <FooterWrapper>
-         <div>
+         <div className="">
            <div>
              <LandingSection />
            </div>
@@ -26,7 +26,7 @@ const HomePage = () => {
              <PopularDestinations />
            </div>
            <div>
-             <HowItWorks />
+             {/* <HowItWorks /> */}
            </div>
            <div>
              <WhyChooseUs />
