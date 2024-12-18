@@ -26,7 +26,7 @@ const HomePage = () => {
              <PopularDestinations />
            </div>
            <div>
-             {/* <HowItWorks /> */}
+             <HowItWorks />
            </div>
            <div>
              <WhyChooseUs />

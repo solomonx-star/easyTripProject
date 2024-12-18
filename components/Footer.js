@@ -10,13 +10,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Contact */}
           <div>
-            <Image
-              src="/logo.png" // Replace with your logo path
+            {/* <Image
+              src="/logo.png" 
               alt="EasyTrip Logo"
               width={150}
               height={50}
               className="mb-4"
-            />
+            /> */}
             <p className="text-sm mb-3">Your Journey, Our Priority</p>
             <p className="flex items-center space-x-2">
               <FiPhoneCall className="text-primaryColour" />

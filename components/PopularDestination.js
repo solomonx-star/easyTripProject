@@ -18,7 +18,7 @@ const PopularDestinations = () => {
   ];
 
   return (
-    <section className="pb-5 pt-10 mt-[5%]">
+    <section className="pb-5">
       <h2
         data-aos-delay="900"
         data-aos-duration="1000"

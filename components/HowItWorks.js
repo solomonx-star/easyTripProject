@@ -1,6 +1,6 @@
 const HowItWorks = () => {
     return (
-      <div className="pb-5 mt-[5%]">
+      <div className="mt-[2%]">
         {/* Section Heading */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-2">How it Works</h1>
@@ -12,12 +12,12 @@ const HowItWorks = () => {
         </div>
 
         {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 px-4 md:px-10">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 md:px-10">
           {/* Step 1 */}
           <div
-            data-aos-delay="900"
-            data-aos-duration="1000"
-            data-aos="fade-right"
+            // data-aos-delay="900"
+            // data-aos-duration="1000"
+            // data-aos="fade-right"
             className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-green-100 transition-transform duration-300 transform hover:-translate-y-2"
           >
             <div className="mb-4">
@@ -45,9 +45,9 @@ const HowItWorks = () => {
 
           {/* Step 2 */}
           <div
-            data-aos-delay="900"
-            data-aos-duration="1000"
-            data-aos="fade-up"
+            // data-aos-delay="900"
+            // data-aos-duration="1000"
+            // data-aos="fade-up"
             className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-blue-100 transition-transform duration-300 transform hover:-translate-y-2"
           >
             <div className="mb-4">
@@ -74,9 +74,9 @@ const HowItWorks = () => {
 
           {/* Step 3 */}
           <div
-            data-aos-delay="900"
-            data-aos-duration="1000"
-            data-aos="fade-up"
+            // data-aos-delay="900"
+            // data-aos-duration="1000"
+            // data-aos="fade-up"
             className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-purple-100 transition-transform duration-300 transform hover:-translate-y-2"
           >
             <div className="mb-4">
@@ -104,9 +104,9 @@ const HowItWorks = () => {
 
           {/* Step 4 */}
           <div
-            data-aos-delay="900"
-            data-aos-duration="1000"
-            data-aos="fade-left"
+            // data-aos-delay="900"
+            // data-aos-duration="1000"
+            // data-aos="fade-left"
             className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-yellow-100 transition-transform duration-300 transform hover:-translate-y-2"
           >
             <div className="mb-4">
