@@ -51,7 +51,7 @@ export default function Login() {
       setLoading(false)
       // Make a POST request to your login endpoint with JSON data
       const response = await fetch(
-        "https://easytrip-salone.up.railway.app/api/auth/login",
+        "http://localhost:5000/api/auth/login",
         {
           method: "POST",
           headers: {

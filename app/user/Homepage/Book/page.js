@@ -50,7 +50,7 @@ function BookDetails() {
       try {
         // Send GET request to fetch users
         const response = await axios.get(
-          "https://easytrip-salone.up.railway.app/api/admin/book"
+          "http://localhost:5000/api/admin/book"
         );
 
         // Update state with fetched users
