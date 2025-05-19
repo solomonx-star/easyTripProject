@@ -1,180 +1,167 @@
-"use client"
+"use client";
 
-
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
+import { LoginService } from "@/app/api/auth"; // Import optimized API client
+import { useAuth } from "@/context/userContext";
+import pic from "@/public/images/briefcase.png";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import pic from "@/public/images/briefcase.png"; // Replace with your actual image path
-import { useAuth } from "@/context/userContext";
-import { Spinner } from "@nextui-org/spinner";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 // Zod schema for form validation
 const formSchema = z.object({
   phoneNumber: z
     .string()
-    .min(2, { message: "Phone must start with +232" })
-    .max(20),
-  password: z.string().min(2,{message: "Password must be at least 7 letters"}).max(20),
+    .regex(/^\+232\d{8}$/, "Phone number must start with +232 and be 11 digits"),
+  password: z.string().min(7, "Password must be at least 7 characters").max(20),
 });
 
 export default function Login() {
-  const [loading, setLoading] = useState(true);
+  const router = useRouter();
   const { login } = useAuth();
-    const [showModal, setShowModal] = useState(false);
-    const [isVisible, setIsVisible] = useState(false);
-    const [visible, setVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lastLoggedInNumber, setLastLoggedInNumber] = useState("");
+
+  // Fetch last logged-in number from localStorage
+  useEffect(() => {
+    const fetchLastLoginNumber = async () => {
+      try {
+        const data = localStorage.getItem("lastLoggedInNumber");
+        if (data) {
+          setLastLoggedInNumber(data);
+        }
+      } catch (error) {
+        console.error("Error fetching last logged-in number:", error);
+      }
+    };
+    fetchLastLoginNumber();
+  }, []);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      phoneNumber: "",
+      phoneNumber: lastLoggedInNumber || "",
       password: "",
     },
   });
 
   async function onSubmit(values) {
     try {
-      setLoading(false)
-      // Make a POST request to your login endpoint with JSON data
-      const response = await fetch(
-        "http://localhost:5000/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
+      setIsSubmitting(true);
+      const response = await LoginService({
+        phoneNumber: values.phoneNumber,
+        password: values.password,
+      });
+      console.log("Login response:", response);
+      console.log("User object:", response?.user);
 
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-      console.log(data);
-
-      const { token, user } = data;
-      console.log("Token:", token);
-      console.log("User Data:", user);
-
-      // Use the login function from your UserContext
-      login(user, token); // Assuming `login` accepts userData and token
-      setShowModal(true);
+      const { user, token } = response;
+      localStorage.setItem("lastLoggedInNumber", values.phoneNumber);
+      login(user, token); // Update auth context
+      toast.success("Login successful!");
     } catch (error) {
+      const errorMessage = error.message || "An error occurred during login";
+      toast.error(errorMessage);
       console.error("Login error:", error);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   }
 
+  const toggleVisibility = () => setIsVisible((prev) => !prev);
+
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="flex h-full w-full">
-        {/* Image Section - Hidden on mobile */}
-        <div className="w-6/12 hidden md:block">
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex w-full max-w-5xl h-screen">
+        {/* Image Section */}
+        <div className="hidden w-6/12 md:block">
           <Image
             src={pic}
             width={400}
             height={400}
             alt="Login Background"
-            className="w-full h-full "
+            className="object-cover w-full h-full"
             priority
           />
         </div>
-
-        {/* Login Form Section */}
-        <div className="shadow-xl space-y-[20px] p-[100px] rounded-md md:w-6/12 w-full items-center flex flex-col justify-center">
-          <div className="px-10 py-20 border-[0.2px] border-gray-100 shadow-lg rounded">
-            {showModal && (
-              <div className="relative flex items-center justify-center">
-                <div className="w-[250px] h-[] p-4 rounded-lg absolute bottom-1 text-center">
-                  <p className="text-xs text-green-500 ">Login Successful!</p>
-                </div>
-              </div>
-            )}
-            <div className="w-96 gap-3 mb-6">
-              <p className="text-2xl font-bold mb-2">Log in</p>
-              <div className="flex gap-1">
-                <p className="text-sm">Dont Have an account?</p>
-                <Link
-                  className="text-sm text-[#189AA7] hover:underline"
-                  href="/user/Signup"
-                >
+        {/* Form Section */}
+        <div className="flex flex-col justify-center w-full p-6 space-y-6 md:w-6/12 md:p-12">
+          <div className="p-8 bg-white rounded-lg shadow-lg">
+            <div className="max-w-md mx-auto">
+              <h2 className="text-2xl font-bold">Log In</h2>
+              <div className="flex gap-1 mt-2">
+                <p className="text-sm">Dont have an account?</p>
+                <Link className="text-sm text-[#189AA7] hover:underline" href="/user/Signup">
                   Sign up
                 </Link>
               </div>
             </div>
-
             <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="space-y-8"
-              >
+              <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-6">
                 <FormField
                   control={form.control}
                   name="phoneNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="sr-only">Phone Number</FormLabel>
+                      <FormLabel>Phone Number</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Phone Number"
-                          {...field}
-                          className="w-96"
-                        />
+                        <Input placeholder="+23212345678" {...field} />
                       </FormControl>
-                      <FormDescription className="sr-only"></FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="sr-only">Password</FormLabel>
+                      <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input
-                          type="password"
-                          placeholder="Password"
-                          {...field}
-                          className="w-96"
-                        />
+                        <div className="relative">
+                          <Input
+                            placeholder="Password"
+                            type={isVisible ? "text" : "password"}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={toggleVisibility}
+                            className="absolute inset-y-0 right-3 flex items-center text-gray-500"
+                          >
+                            {isVisible ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                          </button>
+                        </div>
                       </FormControl>
-                      <FormDescription className="sr-only"></FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-
-                <div>
-                  <Button
-                    className="text-white w-96"
-                    variant="secondary"
-                    size="lg"
-                    type="submit"
-                    // disabled={loading}
-                  >
-                    {loading ? "Login" : <Spinner color="white" size="sm" />}
-                  </Button>
-                </div>
+                <Button
+                  type="submit"
+                  className="w-full text-white"
+                  variant="secondary"
+                  size="lg"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Logging in..." : "Log In"}
+                </Button>
               </form>
             </Form>
           </div>

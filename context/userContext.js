@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }) => {
       try {
         // Fetch user data
         const response = await axios.get(
-          `https://easytrip-salone.up.railway.app/api/auth/getUser/${userId}`,
+          `http://localhost:5000/api/auth/getUser/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

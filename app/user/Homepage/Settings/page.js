@@ -9,7 +9,7 @@ import { z } from "zod";
 import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -54,7 +54,7 @@ export default function Settings() {
     setIsSubmitting(true); // Start loading
     try {
       const response = await fetch(
-        "https://easytrip-salone.up.railway.app/api/user/profile-update",
+        "http://localhost:5000/api/user/profile-update",
         {
           method: "POST",
           headers: {
@@ -110,7 +110,7 @@ export default function Settings() {
 
     try {
       const response = await fetch(
-        "https://easytrip-salone.up.railway.app/api/upload/profile-photo",
+        "http://localhost:5000/api/upload/profile-photo",
         {
           method: "POST",
           headers: {
@@ -137,25 +137,28 @@ export default function Settings() {
     }
   };
 
-  const fetchPhoto = async () => {
-    try {
-      const response = await axios.get(
-        "https://easytrip-salone.up.railway.app/api/user/profile-picture",
-        {
-          headers: {
-            Authorization: `Bearer ${authState.token}`,
-          },
-        }
-      );
-      // Update authState with the new profile photo
-      setAuthState((prevState) => ({
-        ...prevState,
-        user: { ...prevState.user, profilePhoto: response.data.profilePhoto },
-      }));
-    } catch (error) {
-      setError(error.response?.data || error.message);
-    }
-  };
+  useEffect(() => {
+    const fetchPhoto = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/user/profile-picture",
+          {
+            headers: {
+              Authorization: `Bearer ${authState.token}`,
+            },
+          }
+        );
+        // Update authState with the new profile photo
+        setAuthState((prevState) => ({
+          ...prevState,
+          user: { ...prevState.user, profilePhoto: response.data.profilePhoto },
+        }));
+      } catch (error) {
+        setError(error.response?.data || error.message);
+      }
+    };
+    fetchPhoto();
+  }, [authState.token, setAuthState])
 
   return (
     <NavBarWrapper>

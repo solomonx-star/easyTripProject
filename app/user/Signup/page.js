@@ -4,6 +4,7 @@
 import { z } from "zod";
 import { useAuth } from "@/context/userContext";
 import pic from "../../../public/images/briefcase.png";
+import { toast } from "react-hot-toast";
 import {
   Form,
   FormControl,
@@ -19,33 +20,47 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { Spinner } from "@nextui-org/spinner";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { PassengerRegister } from "@/app/api/auth";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
-    firstName: z.string().min(2).max(20),
-    lastName: z.string().min(2).max(20),
+    firstName: z
+      .string()
+      .min(2, "First name must be at least 2 characters")
+      .max(20),
+    lastName: z
+      .string()
+      .min(2, "Last name must be at least 2 characters")
+      .max(20),
     phoneNumber: z
       .string()
-      .min(2, { message: "Phone must start with +232" })
+      .regex(
+        /^\+232\d{8}$/,
+        "Phone number must start with +232 and be 11 digits"
+      ),
+    username: z
+      .string()
+      .min(2, "Username must be at least 2 characters")
       .max(20),
-    username: z.string().min(2).max(20),
-    email: z.string().email("invalid email"),
-    password: z.string().min(8, "Password must be 8 characters long"),
+    email: z.string().email("Please enter a valid email"),
+    password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    path: ["confirmPassword"], // Error will be associated with confirmPassword field
-    message: "Passwords do not match", // Custom error message
+    path: ["confirmPassword"],
+    message: "Passwords do not match",
   });
 
 export default function Login() {
-  const [loading, setLoading] = useState(true)
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { login } = useAuth();
 
   const form = useForm({
@@ -61,58 +76,37 @@ export default function Login() {
     },
   });
 
-  const {
-    // handleSubmit,
-    reset,
-    // formState: { errors },
-  } = form;
-
   async function onSubmit(values) {
-    // setLoading(true);
     try {
-      // Make a POST request to your login endpoint with JSON data
-      const response = await fetch(
-        "http://localhost:5000/api/auth/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(values),
-        }
-      );
+      setIsSubmitting(true);
+      const response = await PassengerRegister({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        phoneNumber: values.phoneNumber,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+      });
 
-      if (!response.ok) {
-        throw new Error("Sign up failed");
+      if (response) {
+        setShowModal(true);
+        toast.success("Sign up successful!");
+        form.reset(); // Clear form on success
+        setTimeout(() => {
+          router.push("/user/Login"); // Redirect to login page
+        }, 5000);
       } else {
-        reset();
+        toast.error("Unexpected response from server");
       }
-      
-
-      const data = await response.json();
-      console.log(data);
-
-      const { token, user } = data;
-      console.log("Token:", token);
-      console.log("User Data:", user);
-
-      // Use the login function from your UserContext
-      // login(user, token); // Assuming `login` accepts userData and token
-
-
-      // setLoading(false); // Stop loading
-      setShowModal(true);
-
-      setTimeout(() => {
-        setShowModal(false);
-        setLoading(false);
-        // router.push("/user/Login"); 
-      }, 2000);
-
     } catch (error) {
-      console.error("Sign up error:", error);
-      setLoading(false);
-    } 
+      const errorMessage =
+        error.message || "An error occurred during registration";
+      toast.error(errorMessage);
+      console.error("Registration error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const toggleVisibility = () => setIsVisible((prev) => !prev);
@@ -120,8 +114,8 @@ export default function Login() {
 
   return (
     <div className=" flex items-center justify-center h-screen">
-      <div className="flex h-full w-full">
-        <div className="w-6/12 hidden md:block">
+      <div className="flex h-full  w-full">
+        <div className="w-6/12 md:block">
           <Image
             src={pic}
             width={400}
@@ -139,7 +133,7 @@ export default function Login() {
                 </div>
               </div>
             )}
-            <div className="w-96">
+            <div className="w-96 ">
               <p className="text-2xl font-bold">Sign up</p>
               <div className="flex gap-1">
                 <p className="text-sm">Already Have an account?</p>
@@ -317,13 +311,9 @@ export default function Login() {
                     variant="secondary"
                     size="lg"
                     type="submit"
+                    disabled={isSubmitting}
                   >
-                    Sign up
-                    {/* {loading ? (
-                      <p>Sign up</p>
-                    ) : (
-                      <Spinner color="white" size="sm" />
-                    )} */}
+                    {isSubmitting ? "Signing up..." : "Sign Up"}
                   </Button>
                 </div>
               </form>

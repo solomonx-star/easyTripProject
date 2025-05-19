@@ -35,7 +35,7 @@ const Navbar = () => {
       menuClasses = [
         "flex",
         "absolute",
-        "top-[75px]",
+        "top-[50px]",
         "bg-black",
         "bg-opacity-60",
         "w-full",
@@ -45,7 +45,6 @@ const Navbar = () => {
         "flex-col",
         "items-center",
         "z-50",
-        ""
       ];
     } else {
       menuClasses = [
@@ -88,11 +87,11 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-4 shadow-md bg-[#F9ECE4]">
+    <nav className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-3 border-none shadow-md bg-[#189AA7]">
       
       <div className="flex items-center">
         
-        <span className="font-bold text-sm md:text-xl md:font-semibold text-gray-800">
+        <span className="font-bold text-sm md:text-xl md:font-semibold text-white">
           <Link href="/">EasyTrip</Link>
         </span>
       </div>
@@ -107,11 +106,11 @@ const Navbar = () => {
               href={link.href}
               className={`${
                 pathname === link.href
-                  ? "border-b-3 border-b-[#21C4D3] text-black"
+                  ? "border-b-3 border-b-white text-black"
                   : ""
               }`}
             >
-              <span className="text-white md:text-black">{link.label}</span>
+              <span className="text-white font-sans text-[13px] md:text-white">{link.label}</span>
             </Link>
           </li>
         ))}
@@ -120,18 +119,26 @@ const Navbar = () => {
       {/* Book Ticket Button and Dropdown Menu */}
       <div className="flex items-center gap-3">
         {/* Book Ticket Button */}
-        <button
+        {/* <button
           onClick={() => router.push("/user/Homepage/Book")}
           className="bg-[#189AA7] md:px-4 px-3 py-2 text-xs md:text-base md:py-2 text-white rounded hover:bg-[#102021] font-medium"
         >
           Book my Ticket
-        </button>
+        </button> */}
+
+        { authState.isAuthenticated ? (
+          <div>
+            <span className="text-white md:text-lg text-sm">{authState.user?.username}</span>
+          </div>
+        ) : (
+          <span></span>
+        )}
 
         {/* Dropdown Menu */}
         {authState.isAuthenticated ? (
           <div className="relative ">
             <div className="flex items-center gap-2">
-              <div className="md:h-10 md:w-10 h-5 w-5 items-center justify-center flex rounded-full text-gray-700 border ">
+              <div className="md:h-11 md:w-11 h-6 w-6 items-center justify-center flex rounded-full text-gray-700 border ">
                 {authState.isAuthenticated ? (
                   <Avatar className="md:h-[40px] md:w-[40px] w-[20px] h-[20px]">
                     <AvatarImage src={authState.user?.profilePhoto} />
@@ -144,14 +151,14 @@ const Navbar = () => {
 
               <DropdownMenu className="">
                 <DropdownMenuTrigger asChild>
-                  <button>
+                  <button className="text-white text-[13px]">
                     <FaChevronDown />
                   </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="">
+                <DropdownMenuContent className="mt-3 mr-5">
                   
                   <DropdownMenuSeparator />
-                  <DropdownMenuRadioGroup value="" onValueChange="">
+                  <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
                     <DropdownMenuRadioItem className="border-b gap-4">
                       <FaRegUser size={15} />
                       <Link href="/user/Homepage/Profile">Profile</Link>
@@ -224,7 +231,7 @@ const Navbar = () => {
             onClick={() => setNavBar(!navbar)}
             className="focus:outline-none"
           >
-            {navbar ? <X /> : <Menu />}
+            {navbar ? <X color="white" /> : <Menu color="white" />}
           </button>
         </div>
       </div>
