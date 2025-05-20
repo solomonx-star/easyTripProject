@@ -19,10 +19,11 @@ import {
   LayoutDashboard,
   LogOut,
   CalendarCheck,
+  Menu
 } from "lucide-react";
 
-
 const SideBar = () => {
+  const [isOpen, setIsOpen] = useState(false);
   const { logout, authState } = useAuth();
   const pathname = usePathname();
 
@@ -53,53 +54,81 @@ const SideBar = () => {
       icon: <Users size={20} color="white" />,
     },
   ];
-    
-
 
   return (
-    <div className="flex flex-col bg-[#189AA7] h-screen w-[250px] pt-8 p-7 ">
-      <div className="flex flex-col items-center space-y-3 justify-center">
-        <Avatar className="h-[80px] w-[80px]">
-          <AvatarImage src={authState.user?.ProfilePhoto} />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-        <div>
+    <>
+      {/* Mobile Toggle Button */}
+      <button
+        className="lg:hidden fixed top-4 left-4 z-20 p-2 text-white bg-gray-900 rounded-md"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle sidebar"
+      >
+        <Menu size={24} />
+      </button>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 h-screen w-[250px] bg-gray-800 pt-8 p-7 flex flex-col transition-transform duration-300 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0 z-10`}
+      >
+        <div className="flex flex-col items-center space-y-3 justify-center">
+          <Avatar className="h-[80px] w-[80px]">
+            <AvatarImage src={authState.user?.profilePhoto} />
+            <AvatarFallback>
+              {authState.user?.username?.charAt(0).toUpperCase() || "CN"}
+            </AvatarFallback>
+          </Avatar>
           <p className="text-xs text-white font-thin">
-            Welcome {authState.user?.username}
+            Welcome {authState.user?.username || "User"}
           </p>
         </div>
-      </div>
-      <nav className="">
-        <ul className="mt-11">
-          <div className="space-y-5">
+        <nav className="mt-11 flex-1">
+          <ul className="space-y-5">
             {links.map((link) => (
               <li key={link.href}>
-                <Link href={link.href}>
+                <Link href={link.href} passHref>
                   <div
-                    className={
+                    className={`flex items-center gap-3 p-2 rounded-md w-full ${
                       pathname === link.href
-                        ? "bg-[#21C4D3] w-[222px] p-2 rounded-bl rounded-tl text-black"
-                        : "p-2 w-[222px]"
-                    }
+                        ? "bg-gray-700 text-blue-500"
+                        : "text-white hover:bg-gray-700"
+                    }`}
+                    aria-current={pathname === link.href ? "page" : undefined}
                   >
-                    <div className="flex items-center gap-3">
-                      <span>{link.icon}</span>
-                      <span className="text-white">{link.label}</span>
-                    </div>
+                    {React.cloneElement(link.icon, {
+                      color: pathname === link.href ? "#3B82F6" : "white",
+                      size: 20,
+                    })}
+                    <span>{link.label}</span>
                   </div>
                 </Link>
               </li>
             ))}
-          </div>
-        </ul>
-      </nav>
-      <div className="mt-auto">
-        <Button className="w-full" variant="outline" size="lg" onClick={logout}>
-          <LogOut size={20} className="mr-2" />
-          <span className="text-base font-medium flex-1">Logout</span>
-        </Button>
+          </ul>
+        </nav>
+        <div className="mt-auto">
+          <Button
+            className="w-full bg-gray-800 text-white hover:bg-gray-700"
+            variant="outline"
+            size="lg"
+            onClick={logout}
+            aria-label="Log out"
+          >
+            <LogOut size={20} className="mr-2" />
+            <span className="text-base font-medium">Logout</span>
+          </Button>
+        </div>
       </div>
-    </div>
+
+      {/* Overlay for Mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-0 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+    </>
   );
 };
 

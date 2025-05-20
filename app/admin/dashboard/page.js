@@ -10,7 +10,7 @@ export default function DashBoard() {
 
   return (
     <DashBoardWrapper>
-      <div>
+      <div className="bg-gray-800">
         <h1>Admin DashBoard </h1>
       </div>
     </DashBoardWrapper>

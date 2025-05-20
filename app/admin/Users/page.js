@@ -26,6 +26,12 @@ export default function Users() {
 
   const { authState } = useAuth();
 
+  const bookingHistory = [
+    { id: 1, date: "2025-05-15", destination: "New York", status: "Confirmed" },
+    { id: 2, date: "2025-05-10", destination: "London", status: "Pending" },
+    { id: 3, date: "2025-05-05", destination: "Tokyo", status: "Completed" },
+  ];
+
   const deleteUser = async (userId) => {
     try {
       const response = await fetch(
@@ -56,7 +62,7 @@ export default function Users() {
       try {
         // Send GET request to fetch users
         const response = await axios.get(
-          "https://easytrip-salone.up.railway.app/api/admin/users"
+          "http://localhost:5000/api/admin/users"
         );
 
         // Update state with fetched users
@@ -76,7 +82,7 @@ export default function Users() {
     const fetchUserCount = async () => {
       try {
         const response = await axios.get(
-          "https://easytrip-salone.up.railway.app/api/admin/count"
+          "http://localhost:5000/api/admin/count"
         );
         setUserCount(response.data.count); // Access the count directly
       } catch (err) {
@@ -102,103 +108,137 @@ export default function Users() {
 
   return (
     <UsersWrapper>
-      <div className="flex flex-col bg-gray-200 flex-grow h-screen">
-        <div className="h-[30%] flex items-center justify-around">
-          <div className="h-[200px] w-[500px] gap-10 flex flex-col rounded-3xl shadow bg-gray-100 p-5">
-            <p className="text-[#189AA7] mt-4">
-              {userCount !== null ? `Total Customer` : "Loading..."}
-            </p>
-            <p className="text-[#189AA7] text-5xl">{userCount}</p>
-          </div>
-          <div className="h-[200px] w-[500px] gap-10 flex flex-col rounded-3xl  shadow bg-gray-100 p-5">
-            <p className="text-[#189AA7] mt-4">New Customer</p>
-            <p className="text-[#189AA7] text-5xl">4</p>
-          </div>
-          <div className="h-[200px] w-[500px] rounded-3xl  shadow bg-gray-100"></div>
+      <div className="flex flex-col min-w-full  lg:pl-[300px] md:pl-9 overflow-hidden bg-gray-900 min-h-screen p-4 sm:p-6  lg:p-8">
+      {/* Metric Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {/* Total Customers */}
+        <div className="flex flex-col h-40 sm:h-48 rounded-2xl shadow-lg bg-gray-800 p-6 transition-transform hover:scale-105">
+          <p className="text-teal-300 text-sm font-medium mb-2">
+            {userCount !== null ? "Total Customers" : "Loading..."}
+          </p>
+          <p className="text-teal-300 text-4xl sm:text-5xl font-bold">
+            {userCount !== null ? userCount : "--"}
+          </p>
         </div>
-        <div className="mt-auto p-5 flex-1 overflow-y items-center justify-center">
-          <div className="flex justify-between">
-            <div className=" w-[1200px] bg-white shadow-md sm:rounded-lg">
-              <Table className="relative">
-                {/* <TableCaption></TableCaption> */}
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Customer</TableHead>
-                    {/* <TableHead>Profile Photo</TableHead> */}
-                    <TableHead>Username</TableHead>
-                    <TableHead className="">Email</TableHead>
-                    <TableHead className="">Phone Number</TableHead>
-                    <TableHead className="">Action</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((item) => (
-                    <TableRow key={item._id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarImage src={authState.user?.ProfilePhoto} />
-                            <AvatarFallback>CN</AvatarFallback>
-                          </Avatar>
-                          <p>{item.firstName}</p>
-                        </div>
-                      </TableCell>
-                      {/* <TableCell>{item}</TableCell> */}
-                      <TableCell>{item.username}</TableCell>
-                      <TableCell className="">{item.email}</TableCell>
-                      <TableCell className="">{item.phoneNumber}</TableCell>
-                      <TableCell className="">
-                        <Button
-                          onClick={() => handleDelete(item._id)}
-                          variant="destructive"
-                          className=""
-                        >
-                          Delete
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <div className="flex items-center justify-center">
-                {loading ? (
-                  <Spinner label="Loading......" size="lg" color="black" />
-                ) : (
-                  ""
-                )}
-              </div>
+        {/* New Customers */}
+        <div className="flex flex-col h-40 sm:h-48 rounded-2xl shadow-lg bg-gray-800 p-6 transition-transform hover:scale-105">
+          <p className="text-teal-300 text-sm font-medium mb-2">New Customers</p>
+          <p className="text-teal-300 text-4xl sm:text-5xl font-bold">
+            {/* {newUserCount !== null ? newUserCount : "--"} */}
+          </p>
+        </div>
+        {/* Active Bookings */}
+        <div className="flex flex-col h-40 sm:h-48 rounded-2xl shadow-lg bg-gray-800 p-6 transition-transform hover:scale-105">
+          <p className="text-teal-300 text-sm font-medium mb-2">Active Bookings</p>
+          <p className="text-teal-300 text-4xl sm:text-5xl font-bold">
+            {/* {activeBookings !== null ? activeBookings : "--"} */}
+          </p>
+        </div>
+      </div>
+
+      {/* Table and Profile Card */}
+      <div className="flex flex-col lg:flex-row gap-6 flex-1 overflow-y-auto">
+        {/* User Table */}
+        <div className="flex-1 bg-gray-800 shadow-md rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Customer</TableHead>
+                <TableHead>Username</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone Number</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {users.map((item) => (
+                <TableRow key={item._id}>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage src={item.profilePhoto} />
+                        <AvatarFallback>
+                          {item.firstName?.charAt(0).toUpperCase() +
+                            (item.lastName?.charAt(0).toUpperCase() || "")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <p className="text-white">{item.firstName} {item.lastName}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-white">{item.username}</TableCell>
+                  <TableCell className="text-white">{item.email}</TableCell>
+                  <TableCell className="text-white">{item.phoneNumber}</TableCell>
+                  <TableCell>
+                    <Button
+                      onClick={() => handleDelete(item._id)}
+                      variant="destructive"
+                      size="sm"
+                      aria-label={`Delete user ${item.firstName}`}
+                    >
+                      Delete
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          {loading && (
+            <div className="flex items-center justify-center py-4">
+              <Spinner label="Loading users..." size="lg" color="teal" />
             </div>
-            <div className="bg-white pt-5 shadow h-[500px] rounded-lg relative w-[400px]">
-              <div className="flex gap-4 flex-col items-center justify-center pt-3">
-                <Avatar className="h-[80px] w-[80px]">
-                  <AvatarImage src={authState.user?.ProfilePhoto} />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
-                <p>Solomon Kanu</p>
-              </div>
-              <div className="flex justify-around mt-5 ">
-                <div className="flex items-center gap-2">
-                  <Mail size={15} />
-                  <p className="text-xs">solomoncaster523@gmail.com</p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone size={15} />
-                  <p className="text-xs">+23299833165</p>
-                </div>
-              </div>
-              <div className="p-7">
-                <p className="font-bold">Booking History</p>
-                <div className="flex flex-col gap-4">
-                  <div className="h-[50px] w-[350px] rounded-md bg-gray-100"></div>
-                  <div className="h-[50px] w-[350px] rounded-md bg-gray-100"></div>
-                  <div className="h-[50px] w-[350px] rounded-md bg-gray-100"></div>
-                  <div className="h-[50px] w-[350px] rounded-md bg-gray-100"></div>
-                </div>
-              </div>
+          )}
+        </div>
+
+        {/* Profile Card */}
+        <div className="w-full lg:w-96 bg-gray-800 shadow-md rounded-lg p-6 flex flex-col">
+          <div className="flex flex-col items-center gap-4">
+            <Avatar className="h-20 w-20">
+              <AvatarImage src={authState.user?.profilePhoto} />
+              <AvatarFallback>
+                {authState.user?.firstName?.charAt(0).toUpperCase() +
+                  (authState.user?.lastName?.charAt(0).toUpperCase() || "")}
+              </AvatarFallback>
+            </Avatar>
+            <p className="text-white text-lg font-semibold">
+              {authState.user?.firstName} {authState.user?.lastName}
+            </p>
+          </div>
+          <div className="flex justify-around mt-4 text-sm text-gray-300">
+            <div className="flex items-center gap-2">
+              <Mail size={15} className="text-teal-300" />
+              <p>{authState.user?.email}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Phone size={15} className="text-teal-300" />
+              <p>{authState.user?.phoneNumber}</p>
+            </div>
+          </div>
+          <div className="mt-6">
+            <p className="text-white font-bold mb-3">Booking History</p>
+            <div className="flex flex-col gap-3">
+              {bookingHistory.length > 0 ? (
+                bookingHistory.map((booking) => (
+                  <div
+                    key={booking.id}
+                    className="flex justify-between items-center p-3 rounded-md bg-gray-700 text-white text-sm"
+                  >
+                    <div>
+                      <p>{booking.date}</p>
+                      <p className="text-gray-300">{booking.destination}</p>
+                    </div>
+                    <p className={`text-${booking.status === "Confirmed" ? "green" : booking.status === "Pending" ? "yellow" : "gray"}-400`}>
+                      {booking.status}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400 text-sm">No bookings found.</p>
+              )}
             </div>
           </div>
         </div>
       </div>
+    </div>
     </UsersWrapper>
   );
 }
