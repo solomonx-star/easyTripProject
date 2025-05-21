@@ -3,9 +3,7 @@ import DashBoardWrapper from "@/components/DashboardWrapper";
 export default function Schedule() {
     return (
       <DashBoardWrapper>
-        <div className="bg-gray-800">
-          <h1>Schedule</h1>
-        </div>
+       <div className="min-h-screen min-w-full bg-gray-900"></div>
       </DashBoardWrapper>
     );
 }

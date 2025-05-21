@@ -74,10 +74,10 @@ export default function Login() {
       const { user, token } = response;
       localStorage.setItem("lastLoggedInNumber", values.phoneNumber);
       login(user, token); // Update auth context
-      toast.success("Login successful!");
+      // toast.success("Login successful!");
     } catch (error) {
       const errorMessage = error.message || "An error occurred during login";
-      toast.error(errorMessage);
+      // toast.error(errorMessage);
       console.error("Login error:", error);
     } finally {
       setIsSubmitting(false);
