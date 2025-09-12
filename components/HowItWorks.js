@@ -1,140 +1,167 @@
+'use client'
+
+import React, { useState } from 'react';
+import { ChevronRight, Smartphone, Download, Calendar, CreditCard } from 'lucide-react';
+
 const HowItWorks = () => {
-    return (
-      <div className="mt-[2%]">
-        {/* Section Heading */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-2">How it Works</h1>
-          <p className="text-gray-600">
-            Explore our &quot;How it Works&quot; section to discover the
-            simplicity <br />
-            behind securing your travel tickets.
+  const [hoveredStep, setHoveredStep] = useState(null);
+
+  const steps = [
+    {
+      id: 1,
+      icon: Smartphone,
+      title: "Book Online",
+      description: "Browse and select your perfect travel option with our intuitive booking platform",
+      color: "from-emerald-400 to-teal-500",
+      bgColor: "bg-emerald-50",
+      hoverBg: "hover:bg-emerald-100",
+      delay: "0ms"
+    },
+    {
+      id: 2,
+      icon: Download,
+      title: "Get Ticket",
+      description: "Receive your digital tickets instantly via email or download to your device",
+      color: "from-blue-400 to-indigo-500",
+      bgColor: "bg-blue-50",
+      hoverBg: "hover:bg-blue-100",
+      delay: "150ms"
+    },
+    {
+      id: 3,
+      icon: Calendar,
+      title: "Manage Bookings",
+      description: "Track, modify, and organize all your travel plans in one convenient dashboard",
+      color: "from-purple-400 to-pink-500",
+      bgColor: "bg-purple-50",
+      hoverBg: "hover:bg-purple-100",
+      delay: "300ms"
+    },
+    {
+      id: 4,
+      icon: CreditCard,
+      title: "Secure Payment",
+      description: "Complete transactions safely with bank-level security and multiple payment options",
+      color: "from-orange-400 to-red-500",
+      bgColor: "bg-orange-50",
+      hoverBg: "hover:bg-orange-100",
+      delay: "450ms"
+    }
+  ];
+
+  return (
+    <div className="relative py-20 px-4 overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-white"></div>
+      <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-blue-200/30 to-purple-200/30 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-r from-emerald-200/20 to-blue-200/20 rounded-full blur-3xl"></div>
+      
+      <div className="relative max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-16 space-y-4">
+          <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-full border border-blue-200/50 mb-4">
+            <span className="text-sm font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Simple Process
+            </span>
+          </div>
+          
+          <h1 className="text-5xl md:text-6xl font-bold">
+            <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
+              How It
+            </span>
+            <br />
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Works
+            </span>
+          </h1>
+          
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Experience the future of travel booking with our streamlined process designed for modern travelers
           </p>
         </div>
 
-        {/* Steps */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 md:px-10">
-          {/* Step 1 */}
-          <div
-            // data-aos-delay="900"
-            // data-aos-duration="1000"
-            // data-aos="fade-right"
-            className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-green-100 transition-transform duration-300 transform hover:-translate-y-2"
-          >
-            <div className="mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-12 h-12 text-green-500"
+        {/* Steps Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 md:gap-6">
+          {steps.map((step, index) => {
+            const IconComponent = step.icon;
+            const isHovered = hoveredStep === step.id;
+            
+            return (
+              <div
+                key={step.id}
+                className="relative group"
+                style={{ animationDelay: step.delay }}
+                onMouseEnter={() => setHoveredStep(step.id)}
+                onMouseLeave={() => setHoveredStep(null)}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.75 8.75h14.5M4.75 15.25h14.5m-9.5-11.5h5a2 2 0 012 2v12.5a2 2 0 01-2 2h-5a2 2 0 01-2-2V5.75a2 2 0 012-2z"
-                />
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold mb-2">Book Online</h2>
-            <p className="text-gray-600">
-              With just a few clicks, you can reserve your travel tickets from
-              the comfort of your own home.
-            </p>
-          </div>
+                {/* Connection Line */}
+                {index < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-0">
+                    <ChevronRight className="w-6 h-6 text-gray-300 group-hover:text-blue-500 transition-colors duration-500" />
+                  </div>
+                )}
+                
+                {/* Step Card */}
+                <div className={`
+                  relative h-full p-8 rounded-3xl border border-gray-200/60 bg-white/80 backdrop-blur-sm
+                  transform transition-all duration-500 ease-out
+                  hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20
+                  ${isHovered ? 'border-blue-300/60' : ''}
+                  group-hover:-translate-y-2
+                `}>
+                  {/* Step Number */}
+                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-r from-gray-800 to-gray-900 rounded-full flex items-center justify-center shadow-lg">
+                    <span className="text-white text-sm font-bold">{step.id}</span>
+                  </div>
+                  
+                  {/* Icon Container */}
+                  <div className={`
+                    relative mb-6 w-20 h-20 mx-auto rounded-2xl
+                    bg-gradient-to-r ${step.color} p-0.5
+                    transform transition-all duration-500
+                    ${isHovered ? 'scale-110 rotate-12' : ''}
+                  `}>
+                    <div className="w-full h-full bg-white rounded-2xl flex items-center justify-center">
+                      <IconComponent className="w-10 h-10 text-gray-700" />
+                    </div>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="text-center space-y-4">
+                    <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed text-sm">
+                      {step.description}
+                    </p>
+                  </div>
+                  
+                  {/* Hover Overlay */}
+                  <div className={`
+                    absolute inset-0 rounded-3xl bg-gradient-to-br ${step.color} opacity-0
+                    transition-opacity duration-500 pointer-events-none
+                    ${isHovered ? 'opacity-5' : ''}
+                  `}></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-          {/* Step 2 */}
-          <div
-            // data-aos-delay="900"
-            // data-aos-duration="1000"
-            // data-aos="fade-up"
-            className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-blue-100 transition-transform duration-300 transform hover:-translate-y-2"
-          >
-            <div className="mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-12 h-12 text-blue-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-3A2.25 2.25 0 008.25 5.25V9m7.5 0v10.5a2.25 2.25 0 01-2.25 2.25h-3A2.25 2.25 0 018.25 19.5V9m7.5 0H8.25"
-                />
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold mb-2">Get Ticket</h2>
-            <p className="text-gray-600">
-              Instantly download or receive your tickets after booking online.
-            </p>
+        {/* Bottom CTA */}
+        <div className="text-center mt-20">
+          <div className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full text-white font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 cursor-pointer">
+            <span>Start Your Journey Today</span>
+            <ChevronRight className="w-5 h-5" />
           </div>
-
-          {/* Step 3 */}
-          <div
-            // data-aos-delay="900"
-            // data-aos-duration="1000"
-            // data-aos="fade-up"
-            className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-purple-100 transition-transform duration-300 transform hover:-translate-y-2"
-          >
-            <div className="mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-12 h-12 text-purple-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 8.25v12a.75.75 0 00.75.75h15a.75.75 0 00.75-.75v-12m-16.5 0A2.25 2.25 0 016 6h12a2.25 2.25 0 012.25 2.25m-16.5 0h16.5M9.75 3.75h4.5m-4.5 0A2.25 2.25 0 0112 6h0a2.25 2.25 0 012.25-2.25m-4.5 0h4.5"
-                />
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold mb-2">View Your Bookings</h2>
-            <p className="text-gray-600">
-              Manage your travel plans by viewing and editing your bookings at
-              any time.
-            </p>
-          </div>
-
-          {/* Step 4 */}
-          <div
-            // data-aos-delay="900"
-            // data-aos-duration="1000"
-            // data-aos="fade-left"
-            className="flex flex-col items-center p-6 shadow-lg bg-white rounded-lg hover:bg-yellow-100 transition-transform duration-300 transform hover:-translate-y-2"
-          >
-            <div className="mb-4">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-12 h-12 text-yellow-500"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.25 7.5V6A2.25 2.25 0 0015 3.75h-6A2.25 2.25 0 006.75 6v1.5m0 9V18a2.25 2.25 0 002.25 2.25h6A2.25 2.25 0 0017.25 18v-1.5m-10.5 0h10.5m-10.5 0V9m10.5 0v6"
-                />
-              </svg>
-            </div>
-            <h2 className="text-xl font-bold mb-2">Seamless Payment</h2>
-            <p className="text-gray-600">
-              Pay securely using a variety of payment methods with a smooth and
-              hassle-free experience.
-            </p>
-          </div>
+          
+          <p className="text-sm text-gray-500 mt-4">
+            Join thousands of satisfied travelers worldwide
+          </p>
         </div>
       </div>
-    );
-  };
-  
-  export default HowItWorks;
-  
+    </div>
+  );
+};
+
+export default HowItWorks;

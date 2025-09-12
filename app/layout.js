@@ -4,6 +4,7 @@ import { AuthProvider } from "@/context/userContext";
 
 import { NextUIProvider } from "@nextui-org/react";
 import SideBar from "./admin/sidebar";
+import { SideBarProvider } from "@/context/sideBarContext";
 
 
 const geistSans = localFont({
@@ -25,6 +26,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
      return (
     <AuthProvider>
+      <SideBarProvider>
       <html lang="en" foxified=""
       className="antialiased"
       suppressHydrationWarning={true}
@@ -36,6 +38,7 @@ export default function RootLayout({ children }) {
           <NextUIProvider>{children}</NextUIProvider>
         </body>
       </html>
+      </SideBarProvider>
     </AuthProvider>
   );
 }

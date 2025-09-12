@@ -4,26 +4,22 @@ import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-// import { useAuth } from "../AuthContext";
 import { useAuth } from "@/context/userContext";
 import { useEffect, useState } from "react";
-import { FiFileText } from "react-icons/fi";
-import { FaLanguage } from "react-icons/fa";
-import { FaUsers, FaBus } from "react-icons/fa";
-import { RiLogoutCircleRLine } from "react-icons/ri";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CalendarCheck, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Clock,
   BusFront,
   Users,
   LayoutDashboard,
   LogOut,
-  CalendarCheck,
-  Menu
+  Menu,
 } from "lucide-react";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [sideBar, setSideBar] = useState(false); // Controls collapsed/expanded state
   const { logout, authState } = useAuth();
   const pathname = usePathname();
 
@@ -66,23 +62,44 @@ const SideBar = () => {
         <Menu size={24} />
       </button>
 
+      {/* Collapse/Expand Button */}
+
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-[250px] bg-gray-800 pt-8 p-7 flex flex-col transition-transform duration-300 ${
+        className={`sticky  inset-0 top-0 left-0 h-screen  bg-gray-800 pt-8 p-4 flex flex-col transition-all duration-400 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 z-10`}
+        } lg:translate-x-0 z-10  ${sideBar ? "w-[80px]" : "w-[250px]"}`} // Dynamic width
       >
-        <div className="flex flex-col items-center space-y-3 justify-center">
-          <Avatar className="h-[80px] w-[80px]">
+        <ChevronLeft
+          size={24}
+          className={`bg-white sm:visible border-gray-800 text-gray-800 text-3xl rounded-full absolute top-9 cursor-pointer -right-[9px] ${
+            !sideBar && "rotate-180"
+          }`}
+          onClick={() => setSideBar(!sideBar)} // Toggle sidebar state
+        />
+
+        {/* User Info */}
+        <div
+          className={`flex flex-col items-center space-y-3 justify-center transition-all duration-300 ${
+            sideBar ? "scale-75" : ""
+          }`} // Scale down avatar when collapsed
+        >
+          <Avatar
+            className={`${sideBar ? "h-[50px] w-[50px]" : "h-[80px] w-[80px]"}`}
+          >
             <AvatarImage src={authState.user?.profilePhoto} />
             <AvatarFallback>
               {authState.user?.username?.charAt(0).toUpperCase() || "CN"}
             </AvatarFallback>
           </Avatar>
-          <p className="text-xs text-white font-thin">
-            Welcome {authState.user?.username || "User"}
-          </p>
+          {!sideBar && ( // Hide username when collapsed
+            <p className="text-xs text-white font-thin">
+              Welcome {authState.user?.username || "User"}
+            </p>
+          )}
         </div>
+
+        {/* Navigation */}
         <nav className="mt-11 flex-1">
           <ul className="space-y-5">
             {links.map((link) => (
@@ -93,30 +110,35 @@ const SideBar = () => {
                       pathname === link.href
                         ? "bg-gray-700 text-blue-500"
                         : "text-white hover:bg-gray-700"
-                    }`}
+                    } ${sideBar ? "justify-center" : ""}`} // Center icons when collapsed
                     aria-current={pathname === link.href ? "page" : undefined}
                   >
                     {React.cloneElement(link.icon, {
                       color: pathname === link.href ? "#3B82F6" : "white",
                       size: 20,
                     })}
-                    <span>{link.label}</span>
+                    {!sideBar && <span>{link.label}</span>}{" "}
+                    {/* Hide labels when collapsed */}
                   </div>
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
+
+        {/* Logout Button */}
         <div className="mt-auto">
           <Button
-            className="w-full bg-gray-800 text-white hover:bg-gray-700"
+            className={`w-full transform-all duration-400 bg-gray-800 text-white hover:bg-gray-700 ${
+              sideBar ? "justify-center flex items-center border-none " : ""
+            }`}
             variant="outline"
             size="lg"
             onClick={logout}
             aria-label="Log out"
           >
-            <LogOut size={20} className="mr-2" />
-            <span className="text-base font-medium">Logout</span>
+            <LogOut size={20} className={sideBar ? "" : "mr-2"} />
+            {!sideBar && <span className="text-base font-medium">Logout</span>}
           </Button>
         </div>
       </div>

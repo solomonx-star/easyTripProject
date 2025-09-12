@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     fetchUser();
-  }, []); // Run only on initial render
+  }); // Run only on initial render
 
   return (
     <AuthContext.Provider value={{ authState, setAuthState, login, logout }}>

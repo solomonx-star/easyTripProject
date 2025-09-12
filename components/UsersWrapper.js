@@ -3,12 +3,10 @@ import SideBar from "../app/admin/sidebar";
 
 function UsersWrapper({ children }) {
   return (
-    <main>
       <div className="flex">
         <SideBar />
-        {children}
+        <main className="flex-1 overflow-auto">{children}</main>
       </div>
-    </main>
   );
 }
 

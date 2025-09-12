@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,23 +10,42 @@ import { MdHistory, MdOutlineLogout } from "react-icons/md";
 import { BiSupport } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
 import { IoSettingsOutline } from "react-icons/io5";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/userContext";
-import { X, Menu } from "lucide-react";
+import { X, Menu, MapPin, Ticket } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Navbar = () => {
-  const [position, setPosition] = useState("bottom");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [navbar, setNavBar] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [authDropdownOpen, setAuthDropdownOpen] = useState(false);
+  const userDropdownRef = useRef(null);
+  const authDropdownRef = useRef(null);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      setScrolled(isScrolled);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Handle click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target)) {
+        setUserDropdownOpen(false);
+      }
+      if (authDropdownRef.current && !authDropdownRef.current.contains(event.target)) {
+        setAuthDropdownOpen(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const getMenu = () => {
     let menuClasses = [];
@@ -35,204 +54,286 @@ const Navbar = () => {
       menuClasses = [
         "flex",
         "absolute",
-        "top-[50px]",
-        "bg-black",
-        "bg-opacity-60",
+        "top-[80px]",
+        "bg-white/95",
+        "backdrop-blur-xl",
         "w-full",
-        "p-4",
+        "p-6",
         "left-0",
-        "gap-3",
+        "gap-4",
         "flex-col",
         "items-center",
         "z-50",
+        "border-t",
+        "border-gray-200/20",
+        "shadow-2xl",
+        "rounded-b-2xl",
       ];
     } else {
       menuClasses = [
         "hidden",
-        "md:flex",
-        "gap-7",
+        "lg:flex",
+        "gap-8",
         "flex-1",
         "justify-center",
-        "mr-16",
+        "mr-20",
         "items-center",
       ];
     }
     return menuClasses.join(" ");
   };
 
-
   const { logout, authState } = useAuth();
-
   const router = useRouter();
-
   const pathname = usePathname();
 
   const links = [
     {
       href: "/user/Homepage",
       label: "Home",
+      icon: "🏠",
     },
     {
       href: "/user/HowItWorks",
-      label: "How It works",
+      label: "How It Works",
+      icon: "⚡",
     },
     {
       href: "/user/About",
       label: "About",
+      icon: "ℹ️",
     },
     {
       href: "/user/Contact",
       label: "Contact",
+      icon: "💬",
     },
   ];
 
   return (
-    <nav className="fixed top-0 w-full z-50 flex items-center justify-between px-6 py-3 border-none shadow-md bg-[#189AA7]">
-      
-      <div className="flex items-center">
-        
-        <span className="font-bold text-sm md:text-xl md:font-semibold text-white">
-          <Link href="/">EasyTrip</Link>
-        </span>
-      </div>
+    <nav 
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ease-out ${
+        scrolled 
+          ? 'bg-white/90 backdrop-blur-xl shadow-lg border-b border-gray-200/20' 
+          : 'bg-gradient-to-r from-[#189AA7] via-[#1BA3B0] to-[#20B2BF] shadow-xl'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          
+          {/* Logo Section */}
+          <div className="flex items-center space-x-3">
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+              scrolled ? 'bg-gradient-to-r from-[#189AA7] to-[#20B2BF]' : 'bg-white/20 backdrop-blur-sm'
+            }`}>
+              <Ticket className={`w-5 h-5 ${scrolled ? 'text-white' : 'text-white'}`} />
+            </div>
+            <span className={`font-bold text-xl transition-all duration-300 ${
+              scrolled ? 'text-gray-900' : 'text-white'
+            }`}>
+              <Link href="/" className="hover:scale-105 transition-transform duration-200">
+                EasyTrip
+              </Link>
+            </span>
+          </div>
 
-      {/* Navigation Links */}
-      <ul className={getMenu()}>
-        {" "}
-        {links.map((link) => (
-          <li key={link.href}>
-            {/* <div className={}> */}
-            <Link
-              href={link.href}
-              className={`${
-                pathname === link.href
-                  ? "border-b-3 border-b-white text-black"
-                  : ""
+          {/* Navigation Links */}
+          <ul className={getMenu()}>
+            {links.map((link, index) => (
+              <li key={link.href} className="relative group">
+                <Link
+                  href={link.href}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 hover:scale-105 ${
+                    pathname === link.href
+                      ? scrolled 
+                        ? 'bg-gradient-to-r from-[#189AA7] to-[#20B2BF] text-white shadow-lg'
+                        : 'bg-white/20 text-white backdrop-blur-sm'
+                      : scrolled
+                        ? 'text-gray-700 hover:bg-gray-100'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  <span className="text-sm">{link.icon}</span>
+                  <span className="font-medium text-sm">{link.label}</span>
+                </Link>
+                
+                {/* Active indicator */}
+                {pathname === link.href && (
+                  <div className={`absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 rounded-full transition-all duration-300 ${
+                    scrolled ? 'bg-[#189AA7]' : 'bg-white'
+                  }`} />
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* Right Section */}
+          <div className="flex items-center space-x-4">
+            
+            {/* Quick Book Button */}
+            <Button
+              onClick={() => router.push("/user/Homepage/Book")}
+              className={`hidden sm:flex items-center space-x-2 px-6 py-2.5 rounded-full font-medium transition-all duration-300 hover:scale-105 shadow-lg ${
+                scrolled 
+                  ? 'bg-gradient-to-r from-[#189AA7] to-[#20B2BF] hover:from-[#157A85] hover:to-[#1A9FAB] text-white'
+                  : 'bg-white text-[#189AA7] hover:bg-gray-50'
               }`}
             >
-              <span className="text-white font-sans text-[13px] md:text-white">{link.label}</span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+              <Ticket className="w-4 h-4" />
+              <span>Book Trip</span>
+            </Button>
 
-      {/* Book Ticket Button and Dropdown Menu */}
-      <div className="flex items-center gap-3">
-        {/* Book Ticket Button */}
-        {/* <button
-          onClick={() => router.push("/user/Homepage/Book")}
-          className="bg-[#189AA7] md:px-4 px-3 py-2 text-xs md:text-base md:py-2 text-white rounded hover:bg-[#102021] font-medium"
-        >
-          Book my Ticket
-        </button> */}
+            {/* User Section */}
+            {authState.isAuthenticated ? (
+              <div className="flex items-center space-x-3">
+                <div className="hidden md:block">
+                  <span className={`text-sm font-medium transition-colors duration-300 ${
+                    scrolled ? 'text-gray-700' : 'text-white'
+                  }`}>
+                    Welcome back, {authState.user?.username}
+                  </span>
+                </div>
 
-        { authState.isAuthenticated ? (
-          <div>
-            <span className="text-white md:text-lg text-sm">{authState.user?.username}</span>
-          </div>
-        ) : (
-          <span></span>
-        )}
-
-        {/* Dropdown Menu */}
-        {authState.isAuthenticated ? (
-          <div className="relative ">
-            <div className="flex items-center gap-2">
-              <div className="md:h-11 md:w-11 h-6 w-6 items-center justify-center flex rounded-full text-gray-700 border ">
-                {authState.isAuthenticated ? (
-                  <Avatar className="md:h-[40px] md:w-[40px] w-[20px] h-[20px]">
-                    <AvatarImage src={authState.user?.profilePhoto} />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                ) : (
-                  <FaRegUser size={26} />
-                )}
-              </div>
-
-              <DropdownMenu className="">
-                <DropdownMenuTrigger asChild>
-                  <button className="text-white text-[13px]">
-                    <FaChevronDown />
+                {/* User Avatar and Dropdown */}
+                <div className="relative" ref={userDropdownRef}>
+                  <button
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="flex items-center space-x-2 p-1 rounded-full hover:bg-white/10 transition-all duration-200 group"
+                  >
+                    <div className="relative">
+                      <Avatar className="h-10 w-10 border-2 border-white/20 transition-all duration-200 group-hover:border-white/40">
+                        <AvatarImage src={authState.user?.profilePhoto} />
+                        <AvatarFallback className="bg-gradient-to-r from-[#189AA7] to-[#20B2BF] text-white text-sm font-semibold">
+                          {authState.user?.username?.charAt(0)?.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-green-400 rounded-full border-2 border-white"></div>
+                    </div>
+                    <FaChevronDown className={`w-3 h-3 transition-all duration-200 ${userDropdownOpen ? 'rotate-180' : ''} ${
+                      scrolled ? 'text-gray-600' : 'text-white/80'
+                    }`} />
                   </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="mt-3 mr-5">
-                  
-                  <DropdownMenuSeparator />
-                  <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-                    <DropdownMenuRadioItem className="border-b gap-4">
-                      <FaRegUser size={15} />
-                      <Link href="/user/Homepage/Profile">Profile</Link>
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem className="border-b gap-4">
-                      <MdHistory size={15} />
-                      <Link href="/user/Homepage/BookingHistory">
-                        Booking History
-                      </Link>
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem className="border-b gap-4">
-                      <BiSupport size={15} />
-                      <Link href="/user/Homepage/Help">Help / support</Link>
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem className="border-b gap-4">
-                      <IoSettingsOutline size={15} />
-                      <Link href="/user/Homepage/Settings">Settings</Link>
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem className="gap-4">
-                      <MdOutlineLogout size={15} />
-                      <button onClick={logout}>Logout</button>
-                    </DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <div className="h-10 w-10 items-center justify-center flex rounded-full text-gray-700 border ">
-              <FaRegUser size={26} />
-            </div>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button>
-                  <FaChevronDown />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="flex justify-center items-center">
-                <DropdownMenuSeparator />
-                <DropdownMenuRadioGroup
-                  value={position}
-                  onValueChange={setPosition}
-                >
-                  <DropdownMenuRadioItem className="border-b">
-                    <Link
-                      className="p-2 flex justify-center items-center w-[110px] "
-                      href="/user/Signup"
-                    >
-                      Sign up
-                    </Link>
-                  </DropdownMenuRadioItem>
-                  <DropdownMenuRadioItem className="">
-                    <Link
-                      className="bg-[#189AA7] p-2 flex justify-center items-center w-[110px]"
-                      href="/user/Login"
-                    >
-                      Login
-                    </Link>
-                  </DropdownMenuRadioItem>
-                </DropdownMenuRadioGroup>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        )}
 
-        <div className="md:hidden flex items-center">
-          <button
-            aria-label="Toggle Navigation Menu"
-            onClick={() => setNavBar(!navbar)}
-            className="focus:outline-none"
-          >
-            {navbar ? <X color="white" /> : <Menu color="white" />}
-          </button>
+                  {/* Custom Dropdown */}
+                  {userDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-xl border border-gray-200/20 shadow-2xl rounded-2xl p-2 z-50">
+                      <div className="px-3 py-2 border-b border-gray-200/30">
+                        <p className="text-sm font-medium text-gray-900">{authState.user?.username}</p>
+                        <p className="text-xs text-gray-500">{authState.user?.email}</p>
+                      </div>
+                      <div className="py-1">
+                        <Link 
+                          href="/user/Homepage/Profile" 
+                          className="flex items-center space-x-3 px-3 py-2.5 hover:bg-gray-100/80 rounded-xl cursor-pointer transition-colors w-full"
+                          onClick={() => setUserDropdownOpen(false)}
+                        >
+                          <FaRegUser className="w-4 h-4 text-gray-600" />
+                          <span className="text-gray-700 font-medium">Profile</span>
+                        </Link>
+                        <Link 
+                          href="/user/Homepage/BookingHistory" 
+                          className="flex items-center space-x-3 px-3 py-2.5 hover:bg-gray-100/80 rounded-xl cursor-pointer transition-colors w-full"
+                          onClick={() => setUserDropdownOpen(false)}
+                        >
+                          <MdHistory className="w-4 h-4 text-gray-600" />
+                          <span className="text-gray-700 font-medium">Booking History</span>
+                        </Link>
+                        <Link 
+                          href="/user/Homepage/Help" 
+                          className="flex items-center space-x-3 px-3 py-2.5 hover:bg-gray-100/80 rounded-xl cursor-pointer transition-colors w-full"
+                          onClick={() => setUserDropdownOpen(false)}
+                        >
+                          <BiSupport className="w-4 h-4 text-gray-600" />
+                          <span className="text-gray-700 font-medium">Help & Support</span>
+                        </Link>
+                        <Link 
+                          href="/user/Homepage/Settings" 
+                          className="flex items-center space-x-3 px-3 py-2.5 hover:bg-gray-100/80 rounded-xl cursor-pointer transition-colors w-full"
+                          onClick={() => setUserDropdownOpen(false)}
+                        >
+                          <IoSettingsOutline className="w-4 h-4 text-gray-600" />
+                          <span className="text-gray-700 font-medium">Settings</span>
+                        </Link>
+                        <div className="border-t border-gray-200/30 mt-2 pt-2">
+                          <button 
+                            onClick={() => {
+                              logout();
+                              setUserDropdownOpen(false);
+                            }}
+                            className="flex items-center space-x-3 px-3 py-2.5 hover:bg-red-50 rounded-xl cursor-pointer transition-colors w-full text-left"
+                          >
+                            <MdOutlineLogout className="w-4 h-4 text-red-600" />
+                            <span className="text-red-600 font-medium">Logout</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-3">
+                <div className="relative" ref={authDropdownRef}>
+                  <button
+                    onClick={() => setAuthDropdownOpen(!authDropdownOpen)}
+                    className="flex items-center space-x-2 p-2 rounded-full hover:bg-white/10 transition-all duration-200 group"
+                  >
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border-2 transition-all duration-200 ${
+                      scrolled 
+                        ? 'border-gray-300 text-gray-600 group-hover:border-[#189AA7] group-hover:text-[#189AA7]'
+                        : 'border-white/30 text-white group-hover:border-white'
+                    }`}>
+                      <FaRegUser className="w-4 h-4" />
+                    </div>
+                    <FaChevronDown className={`w-3 h-3 transition-all duration-200 ${authDropdownOpen ? 'rotate-180' : ''} ${
+                      scrolled ? 'text-gray-600' : 'text-white/80'
+                    }`} />
+                  </button>
+
+                  {/* Auth Dropdown */}
+                  {authDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white/95 backdrop-blur-xl border border-gray-200/20 shadow-2xl rounded-2xl p-2 z-50">
+                      <div className="py-1">
+                        <Link
+                          className="w-full px-4 py-3 text-center rounded-xl hover:bg-gray-100/80 transition-colors text-gray-700 font-medium block"
+                          href="/user/Signup"
+                          onClick={() => setAuthDropdownOpen(false)}
+                        >
+                          Create Account
+                        </Link>
+                        <Link
+                          className="w-full bg-gradient-to-r from-[#189AA7] to-[#20B2BF] hover:from-[#157A85] hover:to-[#1A9FAB] px-4 py-3 text-center rounded-xl transition-all text-white font-medium block shadow-lg mt-2"
+                          href="/user/Login"
+                          onClick={() => setAuthDropdownOpen(false)}
+                        >
+                          Sign In
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Mobile Menu Toggle */}
+            <div className="lg:hidden">
+              <button
+                aria-label="Toggle Navigation Menu"
+                onClick={() => setNavBar(!navbar)}
+                className={`p-2 rounded-xl transition-all duration-200 ${
+                  scrolled 
+                    ? 'hover:bg-gray-100 text-gray-700'
+                    : 'hover:bg-white/10 text-white'
+                }`}
+              >
+                {navbar ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </nav>
