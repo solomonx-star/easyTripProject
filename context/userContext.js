@@ -32,19 +32,19 @@ export const AuthProvider = ({ children }) => {
 
   // Function to handle logout
   const logout = () => {
-    const userRole = authState.user?.role;
+    // const userRole = authState.user?.role;
 
-    setAuthState({ isAuthenticated: false, user: null, token: null });
-    Cookies.remove("authToken"); // Remove the token cookie
-    Cookies.remove("_id"); // Remove the user ID cookie
-    Cookies.remove("user"); // Remove the user cookie
-    if (userRole === "customer") {
-      router.push("/user/Homepage");
-    } else if (userRole === "admin") {
-      router.push("/admin/login");
-    } else {
-      router.push("/");
-    }
+    // setAuthState({ isAuthenticated: false, user: null, token: null });
+    // Cookies.remove("authToken"); // Remove the token cookie
+    // Cookies.remove("_id"); // Remove the user ID cookie
+    // Cookies.remove("user"); // Remove the user cookie
+    // if (userRole === "customer") {
+    //   router.push("/user/Homepage");
+    // } else if (userRole === "admin") {
+    //   router.push("/admin/login");
+    // } else {
+    //   // router.push("/");
+    // }
   };
 
   // Initialize authentication on app load

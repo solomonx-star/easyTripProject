@@ -27,7 +27,7 @@ apiClient.interceptors.request.use( async (config) => {
   return config;
 });
 
-export default {
+const apiMethods = {
   async get(url, params = {}) {
     try {
       const response = await apiClient.get(url, { params });
@@ -52,3 +52,5 @@ export default {
   },
   // Add put, delete, etc., if needed
 };
+
+export default apiMethods;
