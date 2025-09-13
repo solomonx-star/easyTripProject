@@ -55,7 +55,7 @@ const Navbar = () => {
         "flex",
         "absolute",
         "top-[80px]",
-        "bg-white/95",
+        "bg-black/95",
         "backdrop-blur-xl",
         "w-full",
         "p-6",
@@ -68,6 +68,7 @@ const Navbar = () => {
         "border-gray-200/20",
         "shadow-2xl",
         "rounded-b-2xl",
+        "text-white"
       ];
     } else {
       menuClasses = [

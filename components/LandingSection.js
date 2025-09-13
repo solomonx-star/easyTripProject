@@ -1,10 +1,20 @@
 "use client";
-
 import Link from "next/link";
 import React from "react";
 import { useRouter } from "next/navigation";
 import { FaMapMarkerAlt, FaCalendarAlt, FaUser } from "react-icons/fa";
 import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
 
 const LandingSection = () => {
   const router = useRouter();
@@ -25,11 +35,11 @@ const LandingSection = () => {
   };
 
   // Handle search
-   const handleSearch = () => {
-     const queryString = new URLSearchParams(searchParams).toString();
-     console.log("Navigating to:", `/book?${queryString}`);
-     router.push(`/user/Homepage/Book?${queryString}`);
-   };
+  const handleSearch = () => {
+    const queryString = new URLSearchParams(searchParams).toString();
+    console.log("Navigating to:", `/book?${queryString}`);
+    router.push(`/user/Homepage/Book?${queryString}`);
+  };
 
   return (
     <div
@@ -39,7 +49,7 @@ const LandingSection = () => {
       {/* Content */}
       <div className="relative flex flex-col bg-black bg-opacity-50 items-start justify-center h-full text-white px-6 lg:px-20">
         {/* Title */}
-        <h1 className="md:text-6xl text-2xl font-bold ">
+        <h1 className="md:text-7xl text-4xl font-bold ">
           Seamless Booking <br />
           Experience with <br />
           EasyTrip
@@ -52,98 +62,102 @@ const LandingSection = () => {
         </p>
 
         {/* Booking Form */}
-        <div className="md:bg-gray-200 grid grid-cols-2 bg-gray-200 top-[85%]  md:top-[95%] self-center absolute shadow-lg p-4 text-gray-800 md:w-[80%] md:flex flex-col gap-5 md:flex-row items-center md:space-x-5 text-center">
-          {/* FROM Dropdown */}
+        <div className="absolute w-[90%] md:w-[80%] top-[85%] md:top-[92%] self-center">
+          <Card className="bg-gray-200 ">
+            <CardContent className="p-4">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 items-center">
+                {/* FROM Dropdown */}
+                <div className="flex-1">
+                  <div className="bg-white p-3 rounded-lg">
+                    <Label className="flex items-center text-gray-500">
+                      <FaMapMarkerAlt className="mr-2" />
+                      From
+                    </Label>
+                    <select
+                      name="from"
+                      value={searchParams.from}
+                      onChange={handleChange}
+                      className="w-full rounded-lg mt-2 focus:outline-none focus:border-teal-500"
+                    >
+                      <option value="">Select City</option>
+                      <option value="Makeni">Makeni</option>
+                      <option value="Freetown">Freetown</option>
+                      <option value="Bo">Bo</option>
+                      <option value="Kono">Kono</option>
+                    </select>
+                  </div>
+                </div>
 
-          <div className="flex-1">
-            <div className="md:bg-white bg-white md:px-4 p-3">
-              <label className="flex items-center text-gray-500">
-                <FaMapMarkerAlt className="mr-2" />
-                From
-              </label>
-              <select
-                name="from"
-                value={searchParams.from}
-                onChange={handleChange}
-                className="w-full rounded-lg focus:outline-none focus:border-teal-500"
-              >
-                <option value="">Select City</option>
-                <option value="Makeni">Makeni</option>
-                <option value="Freetown">Freetown</option>
-                <option value="Bo">Bo</option>
-                <option value="Kono">Kono</option>
-              </select>
-            </div>
-          </div>
+                {/* TO Dropdown */}
+                <div className="flex-1">
+                  <div className="bg-white p-3 rounded-lg">
+                    <Label className="flex items-center text-gray-500">
+                      <FaMapMarkerAlt className="mr-2" />
+                      To
+                    </Label>
+                    <select
+                      name="to"
+                      value={searchParams.to}
+                      onChange={handleChange}
+                      className="w-full rounded-lg mt-2 focus:outline-none focus:border-teal-500"
+                    >
+                      <option value="">Select City</option>
+                      <option value="Makeni">Makeni</option>
+                      <option value="Freetown">Freetown</option>
+                      <option value="Bo">Bo</option>
+                      <option value="Kono">Kono</option>
+                    </select>
+                  </div>
+                </div>
 
-          {/* TO Dropdown */}
-          <div className="flex-1">
-            <div className="md:bg-white bg-white md:px-4 p-3">
-              <label className="flex items-center text-gray-500">
-                <FaMapMarkerAlt className="mr-2" />
-                To
-              </label>
-              <select
-                name="to"
-                value={searchParams.to}
-                onChange={handleChange}
-                className="w-full rounded-lg focus:outline-none focus:border-teal-500"
-              >
-                <option value="">Select City</option>
-                <option value="Makeni">Makeni</option>
-                <option value="Freetown">Freetown</option>
-                <option value="Bo">Bo</option>
-                <option value="Kono">Kono</option>
-              </select>
-            </div>
-          </div>
+                {/* DEPARTING Date Picker */}
+                <div className="flex-1">
+                  <div className="bg-white p-3 rounded-lg">
+                    <Label className="flex items-center text-gray-500">
+                      <FaCalendarAlt className="mr-2" />
+                      Departing
+                    </Label>
+                    <Input
+                      type="date"
+                      name="departing"
+                      value={searchParams.departing}
+                      onChange={handleChange}
+                      className="w-full rounded-lg mt-2 focus:outline-none focus:border-teal-500"
+                    />
+                  </div>
+                </div>
 
-          {/* DEPARTING Date Picker */}
-          <div className="flex-1">
-            <div className="md:bg-white bg-white md:px-4 p-3">
-              <label className="flex items-center text-gray-500">
-                <FaCalendarAlt className="mr-2" />
-                Departing
-              </label>
-              <input
-                type="date"
-                name="departing"
-                value={searchParams.departing}
-                onChange={handleChange}
-                className="w-full rounded-lg  focus:outline-none focus:border-teal-500"
-              />
-            </div>
-          </div>
+                {/* PASSENGER Dropdown */}
+                <div className="flex-1">
+                  <div className="bg-white p-3 rounded-lg">
+                    <Label className="flex items-center text-gray-500">
+                      <FaUser className="mr-2" />
+                      Passenger
+                    </Label>
+                    <select
+                      name="passenger"
+                      value={searchParams.passenger}
+                      onChange={handleChange}
+                      className="w-full rounded-lg mt-2 focus:outline-none focus:border-teal-500"
+                    >
+                      <option value="1">1 Adult</option>
+                      <option value="2">2 Adults</option>
+                      <option value="3">3 Adults</option>
+                      <option value="4">4 Adults</option>
+                    </select>
+                  </div>
+                </div>
 
-          {/* PASSENGER Dropdown */}
-          <div className="flex-1">
-            <div className="md:bg-white bg-white md:px-4 p-3">
-              <label className="flex items-center text-gray-500">
-                <FaUser className="mr-2" />
-                Passenger
-              </label>
-              <select
-                name="passenger"
-                value={searchParams.passenger}
-                onChange={handleChange}
-                className="w-full rounded-lg focus:outline-none focus:border-teal-500"
-              >
-                <option value="1">1 Adult</option>
-                <option value="2">2 Adults</option>
-                <option value="3">3 Adults</option>
-                <option value="4">4 Adults</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Search Buses Button */}
-
-          <button
-            onClick={handleSearch}
-            className="md:px-8 md:py-3 place-items-center item-center justify-center flex col-span-2 md:col-span-1 self-center bg-teal-500 text-white text-sm p-1 px-3 font-bold rounded shadow-lg hover:bg-teal-600 focus:outline-none"
-          >
-            <p>Search Buses</p>
-          </button>
+                {/* Search Buses Button */}
+                <Button
+                  onClick={handleSearch}
+                  className="md:px-8 md:py-7 col-span-2 md:col-span-1 bg-teal-500 text-white text-sm font-bold rounded-lg shadow-lg hover:bg-teal-600 focus:outline-none"
+                >
+                  Search Buses
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
