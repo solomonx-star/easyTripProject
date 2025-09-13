@@ -104,9 +104,7 @@ export default function Users() {
   return (
     <UsersWrapper>
       <div
-        className={`flex flex-col min-w-full min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-900 transition-all duration-300 ${
-          sideBar ? "lg:pl-[96px]" : "lg:pl-[264px]"
-        }`} // Dynamic padding for sidebar (80px + 16px gap or 250px + 14px gap)
+        className={`flex flex-col min-w-full min-h-screen p-4 sm:p-6 lg:p-8 bg-gray-900 transition-all duration-300`} // Dynamic padding for sidebar (80px + 16px gap or 250px + 14px gap)
       >
         {/* Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
